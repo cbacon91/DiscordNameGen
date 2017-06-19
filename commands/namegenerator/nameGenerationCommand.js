@@ -4,8 +4,6 @@ const seedDataRepository = require('./seed/seedDataRepository');
 const nameGeneratorRepository = require('./generator/nameGeneratorRepository');
 
 class NameGenerationCommand extends commando.Command {
-
-    
     constructor(client) {
         const cmdTitle = "name";
 

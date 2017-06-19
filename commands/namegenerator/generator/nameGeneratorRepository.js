@@ -3,18 +3,21 @@ const randomSelectorGenerator = require('./randomSelectorGenerator');
 const markovChainGenerator = require('./markovChainGenerator');
 const apiGenerator = require('./apiGenerator');
 
-class NameGeneratorRepository {
-    generateName(seed) {
-        const generators = {
-            "randomSelector": new randomSelectorGenerator(),
-            "markovChain": new markovChainGenerator(),
-            "api": new apiGenerator(),
-        };
-        const innerGenerator = generators[config.generator.type];
-        if(!innerGenerator)
-            throw `generator type ${config.generator.type} not implemented`;
+const generators = {
+    "randomSelector": () => new randomSelectorGenerator(),
+    "markovChain": () => new markovChainGenerator(),
+    "api": () => new apiGenerator(),
+};
 
-        return innerGenerator.generateName(seed);
+class NameGeneratorRepository {
+    constructor() {
+        this.innerGenerator = generators[config.generator.type]();
+        if(!this.innerGenerator)
+            throw `generator type ${config.generator.type} not implemented`;
+    }
+
+    generateName(seed) {
+        return this.innerGenerator.generateName(seed);
     }
 }
 
