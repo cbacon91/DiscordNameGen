@@ -13,7 +13,6 @@ const genders = males.concat(females);
 class ArgsParser {
     
     // todo with the parsing..
-    // 1) huge switch blocks are silly. this should be a mapping of some sort
     // 2) currently it parses the race first, and then the gender - this is a little silly. It shouldn't care about the order. 
     //      "Dwarf female" and "female dwarf" should return similar results.
     // 3) only 0, 1, or 2 args are allowed. More than that are just ignored - this is touched on in 2) and 4)
@@ -31,15 +30,22 @@ class ArgsParser {
     parseArgs(inArgs) {
         const args = inArgs.split(' ');
         const parsedArgs = {
-            race: 'human', 
-            gender:'male'
+            races: [], 
+            genders: []
         };
 
-        if(args.length)
-            parsedArgs.race = this.parseRace(args[0]);
+        args.forEach((arg) => {
+            if(this.isGender(arg)) 
+                parsedArgs.genders.push(this.parseGender(arg));
+            else if(this.isRace(arg)) 
+                parsedArgs.races.push(this.parseRace(arg));
+            //simply ignore args that aren't either
+        });
 
-        if(args.length > 1)
-            parsedArgs.gender = this.parseGender(args[1]);
+        if(!parsedArgs.genders.length)
+            parsedArgs.genders.push('male'); //default male; should this be random or should we supply both and let consumer decide?
+        if(!parsedArgs.races.length)
+            parsedArgs.races.push('human'); //default human; should this be random or should we supply all and let consumer decide?
 
         return parsedArgs;
     }
