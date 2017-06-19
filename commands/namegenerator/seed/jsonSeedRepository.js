@@ -1,6 +1,6 @@
 class JsonSeedRepository {
     getSeedData(args) {
-        const seed = require('./humanMale');
+        const seed = require(`./${args.race}${args.gender}`);
         return seed;
     }
 }
