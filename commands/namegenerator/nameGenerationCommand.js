@@ -5,6 +5,8 @@ const ArgsParser = require('./argsParser');
 
 const DISCORD_MESSAGE_CHARACTER_LIMIT = 2000;
 const NEWLINE = require('os').EOL;
+const REMOVE_TOKEN = '$#'; //arbitrary token to remove.
+const MESSAGE_TOO_LONG = `The list of names would exceed Discord's character limit. Removed ${REMOVE_TOKEN} names.`;
 
 class NameGenerationCommand extends commando.Command {
     constructor(client) {
@@ -50,16 +52,32 @@ class NameGenerationCommand extends commando.Command {
             replyMessage += NEWLINE;
         }
 
-        replyMessage += generated.names.join(NEWLINE);
+        let nameList = generated.names.join(NEWLINE);
 
-        // deal with 2000 character limit!
-        // it *probably* won't ever be hit with a max of 50 characters, since a surname and a firstname 
-        // should be no more than 30 characters; 30 * 50 = 1500 that gives 500 characters for messages, 
-        // so it **should** be okay, but there should still be some handling around it.
-        // todo: get total message size just before sending; if message is too long, start popping names 
-        // off the list until we're below the limit again
+        if(this.isMessageTooLong(nameList, replyMessage))
+        {
+            replyMessage += MESSAGE_TOO_LONG;
+
+            let isRemovingNames = true;
+            let removedNames = 0;
+            while(isRemovingNames) {
+                generated.names.pop();
+                removedNames++;
+                nameList = generated.names.join(NEWLINE);
+
+                if(!this.isMessageTooLong(nameList, replyMessage)) 
+                    isRemovingNames = false;
+            }
+            replyMessage.replace(REMOVE_TOKEN, removedNames);
+        }
+
+        replyMessage += nameList;
 
         return replyMessage;
+    }
+
+    isMessageTooLong(names, currentMessage) {
+        return names.length + currentMessage > DISCORD_MESSAGE_CHARACTER_LIMIT;
     }
 }
 
