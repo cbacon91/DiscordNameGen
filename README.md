@@ -23,7 +23,7 @@ humans = ['human', 'person', 'half'];
 ```
 ```
 males = ['m', 'male', 'man', 'boy'];
-females = ['f', 'female', 'woman', 'girl'];
+females = ['f', 'female', 'w', 'woman', 'girl'];
 ```
 
 # Bugs
