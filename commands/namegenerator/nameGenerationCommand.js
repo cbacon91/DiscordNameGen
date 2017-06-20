@@ -21,7 +21,7 @@ class NameGenerationCommand extends commando.Command {
     async run(message, args) {
         const seedData = this.seedDataRepository.getSeedData(args);
         const generated = this.nameGeneratorRepository.generateName(seedData);
-        message.reply(generated);
+        message.channel.send(generated);
     }
 }
 
