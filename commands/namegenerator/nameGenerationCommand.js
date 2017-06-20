@@ -3,6 +3,8 @@ const config = require('../../config'); //todo let's stop using ../../
 const NameGeneratorRepository = require('./generator/nameGeneratorRepository');
 const ArgsParser = require('./argsParser');
 
+const DISCORD_MESSAGE_CHARACTER_LIMIT = 2000;
+
 class NameGenerationCommand extends commando.Command {
     constructor(client) {
         const cmdTitle = "name";
@@ -21,7 +23,14 @@ class NameGenerationCommand extends commando.Command {
     async run(message, args) {
         const parsedArgs = this.argsParser.parseArgs(args);
         const generated = this.nameGeneratorRepository.generateName(parsedArgs);
-        message.channel.send(generated);
+        
+        let shortening = true;
+        while(shortening) {
+            let genString = String(generated);
+            if(genString.length > DISCORD_MESSAGE_CHARACTER_LIMIT)
+        }
+
+        message.channel.send(generated); 
     }
 }
 

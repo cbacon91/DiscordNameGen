@@ -3,21 +3,23 @@ const elves = ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'];
 const hobbitses = ['h', 'halfling', 'hobbit', 'kender'];
 const orcs = ['o', 'orc', 'ork', 'orcish', 'orkish'];
 const gnomes = ['g', 'gnome', 'gnomish'];
-const humans = ['human', 'person'];
+const humans = ['human', 'person', 'half'];
 const allRaces = dwarves.concat(elves, hobbitses, orcs, gnomes, humans);
 
 const males = ['m', 'male', 'man', 'boy'];
 const females = ['f', 'female', 'woman', 'girl'];
 const genders = males.concat(females);
 
+const MAX_NAME_COUNT = 50;
+
 class ArgsParser {
     
     // todo with the parsing..
     // 5) building on 4), allow "half-elf" and "half-X", assume the other half is human
-    // 6) These lists should probably be mapped to a config, external json, or database-like file - hardcoding them feels dirty. 
-    // 7) finally, right now the default is 'human male'. Should it be human male, or should it be random? Maybe it could be a 
+    // 6) These lists should probably be mapped to a config, external json, or database-like file - hardcoding them feels dirty.
+    // 7) finally, right now the default is 'human male'. Should it be human male, or should it be random? Maybe it could be a
     //      config setting? human male is good because human names should be applicable to other races (they're generic) and male
-    //      characters are generally more common than females (at least in the games I've played.. ), but there's a point to be 
+    //      characters are generally more common than females (at least in the games I've played.. ), but there's a point to be
     //      made for a randomization (even if it's soemthing like 85% human 75% male or something .. tbd)
 
     parseArgs(inArgs) {
@@ -49,11 +51,14 @@ class ArgsParser {
     isCount(inArg)
     {
         const n = Math.floor(Number(inArg));
-        return String(n) === inArg && n >= 0 && n <= 100; //let's not generate more than 100 at a time    
+        return String(n) === inArg && n >= 0;   
     }
 
     parseCount(inArg)
     {
+        let count = inArg <= MAX_NAME_COUNT
+            ? inArg
+            : MAX_NAME_COUNT; //maybe return a message instead of just spitting back MAX_NAME_COUNT?
         return Math.floor(Number(inArg));
     }
 
