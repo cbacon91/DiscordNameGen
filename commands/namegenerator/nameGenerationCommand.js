@@ -19,8 +19,6 @@ class NameGenerationCommand extends commando.Command {
     }
 
     async run(message, args) {
-        //todo: parse args for gender, race, etc
-
         const seedData = this.seedDataRepository.getSeedData(args);
         const generated = this.nameGeneratorRepository.generateName(seedData);
         message.reply(generated);
