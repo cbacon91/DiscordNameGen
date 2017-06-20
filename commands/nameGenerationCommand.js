@@ -1,22 +1,20 @@
-const commando = require('discord.js-commando');
-const config = require('../../config'); //todo let's stop using ../../
-const NameGeneratorRepository = require('./generator/nameGeneratorRepository');
-const ArgsParser = require('./argsParser');
+const config = require('../config'); //todo let's stop using ../../
+const NameGeneratorRepository = require('./namegenerator/generator/nameGeneratorRepository');
+const ArgsParser = require('./namegenerator/argsParser');
+const CommandBase = require('../commandBase');
 
 const DISCORD_MESSAGE_CHARACTER_LIMIT = 2000;
 const NEWLINE = require('os').EOL;
 const REMOVE_TOKEN = '$#'; //arbitrary token to remove.
 const MESSAGE_TOO_LONG = `The list of names would exceed Discord's character limit. Removed ${REMOVE_TOKEN} names.`;
 
-class NameGenerationCommand extends commando.Command {
+class NameGenerationCommand extends CommandBase {
     constructor(client) {
         const cmdTitle = "name";
 
         super(client, {
             name: cmdTitle,
-            memberName: cmdTitle,
             description: "Picks a name from a list of names based on race and gender",
-            group: "namegenerator"
         });
 
         this.nameGeneratorRepository = new NameGeneratorRepository();

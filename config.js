@@ -1,6 +1,7 @@
 module.exports = {
     discord: { //discord settings
-        authToken: "" 
+        authToken: "",
+        defaultPrefix: '%'
     },
     generator: {
         type: "randomSelector", //randomSelector, markovChain, api, etc
