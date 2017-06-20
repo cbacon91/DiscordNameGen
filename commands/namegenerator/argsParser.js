@@ -24,7 +24,8 @@ class ArgsParser {
         const args = inArgs.split(' ');
         const parsedArgs = {
             races: [], 
-            genders: []
+            genders: [],
+            nameCount: 1 
         };
 
         args.forEach((arg) => {
@@ -32,7 +33,9 @@ class ArgsParser {
                 parsedArgs.genders.push(this.parseGender(arg));
             else if(this.isRace(arg)) 
                 parsedArgs.races.push(this.parseRace(arg));
-            //simply ignore args that aren't either
+            else if(this.isCount(arg)) //the only issue is that if we are presented with multiple integers, we just take the last one in the list; should we force this to be singleton?
+                parsedArgs.nameCount = this.parseCount(arg);
+            //simply ignore args that aren't any of the above
         });
 
         if(!parsedArgs.genders.length)
@@ -41,6 +44,17 @@ class ArgsParser {
             parsedArgs.races.push('human'); //default human; should this be random or should we supply all and let consumer decide?
 
         return parsedArgs;
+    }
+
+    isCount(inArg)
+    {
+        const n = Math.floor(Number(inArg));
+        return String(n) === inArg && n >= 0 && n <= 100; //let's not generate more than 100 at a time    
+    }
+
+    parseCount(inArg)
+    {
+        return Math.floor(Number(inArg));
     }
 
     isGender(inArg)
