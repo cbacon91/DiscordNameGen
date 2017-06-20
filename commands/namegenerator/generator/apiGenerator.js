@@ -1,5 +1,5 @@
 class ApiGenerator {
-    generateName(seed) {
+    generateName(args) {
         throw 'not implemented';
     }
 }

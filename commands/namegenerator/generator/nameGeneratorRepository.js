@@ -1,23 +1,23 @@
 const config = require('../../../config'); //todo: import? babel?
-const randomSelectorGenerator = require('./randomSelectorGenerator');
-const markovChainGenerator = require('./markovChainGenerator');
-const apiGenerator = require('./apiGenerator');
+const RandomSelectorGenerator = require('./randomSelectorGenerator');
+const MarkovChainGenerator = require('./markovChainGenerator');
+const ApiGenerator = require('./apiGenerator');
 
 const generators = {
-    "randomSelector": () => new randomSelectorGenerator(),
-    "markovChain": () => new markovChainGenerator(),
-    "api": () => new apiGenerator(),
+    "randomSelector": () => new RandomSelectorGenerator(),
+    "markovChain": () => new MarkovChainGenerator(),
+    "api": () => new ApiGenerator(),
 };
 
 class NameGeneratorRepository {
     constructor() {
-        this.innerGenerator = generators[config.generator.type]();
+        this.innerGenerator = generators[config.generator.type](); //should probably be DI instead of hardcoded like this
         if(!this.innerGenerator)
             throw `generator type ${config.generator.type} not implemented`;
     }
 
-    generateName(seed) {
-        return this.innerGenerator.generateName(seed);
+    generateName(args) {
+        return this.innerGenerator.generateName(args);
     }
 }
 

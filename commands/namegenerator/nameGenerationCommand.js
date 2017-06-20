@@ -1,7 +1,7 @@
 const commando = require('discord.js-commando');
 const config = require('../../config'); //todo let's stop using ../../
-const seedDataRepository = require('./seed/seedDataRepository');
-const nameGeneratorRepository = require('./generator/nameGeneratorRepository');
+const NameGeneratorRepository = require('./generator/nameGeneratorRepository');
+const ArgsParser = require('./argsParser');
 
 class NameGenerationCommand extends commando.Command {
     constructor(client) {
@@ -14,13 +14,13 @@ class NameGenerationCommand extends commando.Command {
             group: "namegenerator"
         });
 
-        this.seedDataRepository = new seedDataRepository();
-        this.nameGeneratorRepository = new nameGeneratorRepository();
+        this.nameGeneratorRepository = new NameGeneratorRepository();
+        this.argsParser = new ArgsParser();
     }
 
     async run(message, args) {
-        const seedData = this.seedDataRepository.getSeedData(args);
-        const generated = this.nameGeneratorRepository.generateName(seedData);
+        const parsedArgs = this.argsParser.parseArgs(args);
+        const generated = this.nameGeneratorRepository.generateName(parsedArgs);
         message.channel.send(generated);
     }
 }
