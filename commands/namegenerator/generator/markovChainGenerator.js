@@ -1,6 +1,6 @@
-const SeededGenerator = require('./seededGenerator');
+const SeedDataRepository = require('./seed/seedDataRepository');
 
-class MarkovChainGenerator extends SeededGenerator {
+class MarkovChainGenerator extends SeedDataRepository {
     constructor() {
         super();
     }

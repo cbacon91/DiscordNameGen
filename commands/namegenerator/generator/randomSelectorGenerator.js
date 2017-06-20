@@ -1,6 +1,6 @@
-const SeededGenerator = require('./seededGenerator');
+const SeedDataRepository = require('./seed/seedDataRepository');
 
-class RandomSelectorGenerator extends SeededGenerator {
+class RandomSelectorGenerator extends SeedDataRepository {
     constructor() {
         super();
     }

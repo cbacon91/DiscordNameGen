@@ -7,8 +7,6 @@ const config = require('./config');
 const bot = new commando.Client();
 const token = config.discord.authToken;
 
-
-
 bot.registry.registerGroup('namegenerator', 'namegenerator');
 bot.registry.registerDefaults();
 bot.registry.registerCommandsIn(__dirname + '/commands');
