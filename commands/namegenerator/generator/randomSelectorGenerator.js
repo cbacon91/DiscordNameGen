@@ -1,8 +1,6 @@
 class RandomSelectorGenerator {
     generateName(seed) {
-        const min = 0;
-        const max = seed.length;
-        const selected = Math.floor(Math.random() * (max - min)) + min;
+        const selected = Math.randomInt(0, seed.length);
         return seed[selected];
     }
 }

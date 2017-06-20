@@ -1,10 +1,7 @@
 class JsonSeedRepository {
     getSeedData(args) {
-        //todo
-        //pick random args.races
-        //pick random args.genders
-        const race = args.races[0];
-        const gender = args.genders[0];
+        const race = args.races[Math.randomInt(0, args.races.length)];
+        const gender = args.genders[Math.randomInt(0, args.genders.length)];
 
         const seed = require(`./jsonSeedData/${race}${gender}`);
         return seed;
