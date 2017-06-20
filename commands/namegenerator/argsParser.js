@@ -1,16 +1,19 @@
-const dwarves = ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'];
-const elves = ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'];
-const hobbitses = ['h', 'halfling', 'hobbit', 'kender'];
-const orcs = ['o', 'orc', 'ork', 'orcish', 'orkish'];
-const gnomes = ['g', 'gnome', 'gnomish'];
-const humans = ['human', 'person', 'half'];
-const allRaces = dwarves.concat(elves, hobbitses, orcs, gnomes, humans);
+const dwarfKeys = ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'];
+const elfKeys = ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'];
+const hobbitsesKeys = ['h', 'halfling', 'hobbit', 'kender'];
+const orcKeys = ['o', 'orc', 'ork', 'orcish', 'orkish'];
+const gnomeKeys = ['g', 'gnome', 'gnomish'];
+const humanKeys = ['human', 'person', 'half'];
+const raceKeys = dwarfKeys.concat(elfKeys, hobbitsesKeys, orcKeys, gnomeKeys, humanKeys);
 
-const males = ['m', 'male', 'man', 'boy'];
-const females = ['f', 'female', 'woman', 'girl'];
-const genders = males.concat(females);
+const maleKeys = ['m', 'male', 'man', 'boy'];
+const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
+const genderKeys = maleKeys.concat(femaleKeys);
 
+const NEWLINE = require('os').EOL;
 const MAX_NAME_COUNT = 50;
+const DEFAULT_GENDER = 'male';
+const DEFAULT_RACE = 'human';
 
 class ArgsParser {
     
@@ -27,24 +30,40 @@ class ArgsParser {
         const parsedArgs = {
             races: [], 
             genders: [],
-            nameCount: 1 
+            nameCount: 1,
+            error: '',
+            message: ''
         };
 
-        args.forEach((arg) => {
-            if(this.isGender(arg)) 
-                parsedArgs.genders.push(this.parseGender(arg));
-            else if(this.isRace(arg)) 
-                parsedArgs.races.push(this.parseRace(arg));
-            else if(this.isCount(arg)) //the only issue is that if we are presented with multiple integers, we just take the last one in the list; should we force this to be singleton?
-                parsedArgs.nameCount = this.parseCount(arg);
-            //simply ignore args that aren't any of the above
-        });
+        try {
+            args.forEach((arg) => {
+                if(this.isGender(arg)) {
+                    parsedArgs.genders.push(this.parseGender(arg));
+                }
+                else if(this.isRace(arg)) {
+                    parsedArgs.races.push(this.parseRace(arg));
+                }
+                else if(this.isCount(arg)) { 
+                    if(parsedArgs.nameCount !== 1) {
+                        throw 'Already specified name count - can only take one name count!'; //throw in order to just end the loop
+                    }
+                    parsedArgs.nameCount = this.parseCount(arg, parsedArgs);
+                }
+                //simply ignore args that aren't any of the above
+            });
 
-        if(!parsedArgs.genders.length)
-            parsedArgs.genders.push('male'); //default male; should this be random or should we supply both and let consumer decide?
-        if(!parsedArgs.races.length)
-            parsedArgs.races.push('human'); //default human; should this be random or should we supply all and let consumer decide?
-
+            if(!parsedArgs.genders.length) {
+                parsedArgs.genders.push(DEFAULT_GENDER); //default male; should this be random or should we supply both and let consumer decide?
+                parsedArgs.message += `Gender not specified or found; using default (${DEFAULT_GENDER})${NEWLINE}`;
+            }
+            if(!parsedArgs.races.length) {
+                parsedArgs.races.push(DEFAULT_RACE); //default human; should this be random or should we supply all and let consumer decide?
+                parsedArgs.message += `Race not specified or found; using default (${DEFAULT_RACE})${NEWLINE}`;
+            }
+        }
+        catch(e) {
+            parsedArgs.error = e; //if there is an error, just get out of here
+        }
         return parsedArgs;
     }
 
@@ -54,40 +73,44 @@ class ArgsParser {
         return String(n) === inArg && n >= 0;   
     }
 
-    parseCount(inArg)
+    parseCount(inArg, parsedArgs)
     {
-        let count = inArg <= MAX_NAME_COUNT
-            ? inArg
-            : MAX_NAME_COUNT; //maybe return a message instead of just spitting back MAX_NAME_COUNT?
-        return Math.floor(Number(inArg));
+        let count = Math.floor(Number(inArg));
+
+        if(count > MAX_NAME_COUNT) {
+            parsedArgs.message += `Exceeded max name count; using max (${MAX_NAME_COUNT})${NEWLINE}`;
+            count = MAX_NAME_COUNT;
+        }
+
+        return count;
     }
 
     isGender(inArg)
     {
-        return genders.includes(inArg);
+        return genderKeys.includes(inArg);
     }
 
     parseGender(inArg) {
-        return females.includes(inArg) 
+        return femaleKeys.includes(inArg) 
             ? 'female' 
-            : 'male'; //default to male; should this be random?
+            : 'male';
     }
 
     isRace(inArg)
     {
-        return allRaces.includes(inArg);
+        return raceKeys.includes(inArg);
     }
 
     parseRace(inArg) {
-        if(dwarves.includes(inArg))
+        if(dwarfKeys.includes(inArg))
             return 'dwarf';
-        else if(elves.includes(inArg))
+        else if(elfKeys.includes(inArg))
             return 'elf';
-        else if(hobbitses.includes(inArg))
+        else if(hobbitsesKeys.includes(inArg))
             return 'halfling';
-        else if(orcs.includes(inArg))
+        else if(orcKeys.includes(inArg))
             return 'orc';
-        else if(gnomes.includes(inArg))
+        else if(gnomeKeys.includes(inArg))
             return 'gnome';
         
         return 'human'; //default to human; should this be random?

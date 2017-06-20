@@ -6,15 +6,26 @@ class RandomSelectorGenerator extends SeededGenerator {
     }
 
     generateName(args) {
-        const seed = super.getSeedData(args);
+        const generated = {
+            names: [],
+            error: '',
+            message: ''
+        };
         
-        const names = [];
+        const seed = super.getSeedData(args);
+        if(seed.error) {
+            generated.error = seed.error;
+            return generated;
+        }
+        if(seed.message) 
+            generated.message += seed.message;
+
         for(let i = 0; i < args.nameCount; i++){
-            const selected = Math.randomInt(0, seed.length);
-            names.push(seed[selected]);
+            const selected = Math.randomInt(0, seed.seeds.length);
+            generated.names.push(seed.seeds[selected]);
         }
 
-        return names;
+        return generated;
     }
 }
 
