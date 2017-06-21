@@ -2,7 +2,6 @@ const config = require('../config'); //todo let's stop using ../../
 const pkge = require('../package');
 const CommandBase = require('../commandBase');
 
-const NEWLINE = require('os').EOL;
 
 class HelpCommand extends CommandBase {
     constructor(client) {
@@ -20,9 +19,9 @@ class HelpCommand extends CommandBase {
 		if(message.guild) {
 			prefix = config.discord.defaultPrefix;
 		}
-        let helpText = '```asciidoc' + NEWLINE;
-        helpText += 'Format:' + NEWLINE;
-        helpText += 'CommandName :: Usage Example :: Description' + NEWLINE;
+        let helpText = '```asciidoc' + this.NEWLINE;
+        helpText += 'Format:' + this.NEWLINE;
+        helpText += 'CommandName :: Usage Example :: Description' + this.NEWLINE;
         this.client.commands.forEach((command) => {
 			helpText += prefix + command.name;
 
@@ -32,18 +31,18 @@ class HelpCommand extends CommandBase {
             if(command.description)
                 helpText += ` ::  ${command.description}`                
             
-            helpText += NEWLINE;
+            helpText += this.NEWLINE;
 		});
         
-        helpText += NEWLINE;
+        helpText += this.NEWLINE;
         helpText += '===============================';
-        helpText += NEWLINE + NEWLINE;
+        helpText += this.NEWLINE + this.NEWLINE;
         helpText += `Version ${pkge.version}`;
-        helpText += NEWLINE;
+        helpText += this.NEWLINE;
         helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url}`;
         helpText += '```';
 
-		return message.channel.sendMessage(helpText);
+        return this.send(helpText, message);
     }
 }
 

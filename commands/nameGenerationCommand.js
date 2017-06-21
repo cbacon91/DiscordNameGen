@@ -4,7 +4,6 @@ const ArgsParser = require('./namegenerator/argsParser');
 const CommandBase = require('../commandBase');
 
 const DISCORD_MESSAGE_CHARACTER_LIMIT = 2000;
-const NEWLINE = require('os').EOL;
 const REMOVE_TOKEN = '$#'; //arbitrary token to remove.
 const MESSAGE_TOO_LONG = `The list of names would exceed Discord's character limit. Removed ${REMOVE_TOKEN} names.`;
 
@@ -26,18 +25,16 @@ class NameGenerationCommand extends CommandBase {
         const parsedArgs = this.argsParser.parseArgs(args);
 
         if(parsedArgs.error) {
-            message.channel.send(`**${parsedArgs.error}**`); 
-            return; //if there was an error, just get out of here.
+            return this.send(`**${parsedArgs.error}**`, message); 
         }
 
         const generated = this.nameGeneratorRepository.generateName(parsedArgs);
         
         if(generated.error) {
-            message.channel.send(`**${generated.error}**`); 
-            return; //if there was an error, just get out of here.
+            return this.send(`**${generated.error}**`, message); 
         }
         
-        message.channel.send(this.buildReply(parsedArgs, generated)); 
+        return this.send(this.buildReply(parsedArgs, generated), message); 
     }
 
     buildReply(parsedArgs, generated) {
@@ -45,13 +42,13 @@ class NameGenerationCommand extends CommandBase {
 
         if(parsedArgs.message || generated.message) {
             replyMessage += `*${parsedArgs.message}${generated.message}`;
-            replyMessage = replyMessage.substring(0, replyMessage.length - 2); //cut off the ending newline so the * can be next to a character
+            replyMessage = replyMessage.substring(0, replyMessage.length - 2); //cut off the ending NEWLINE so the * can be next to a character
             replyMessage += '*'; 
-            replyMessage += NEWLINE;
-            replyMessage += NEWLINE;
+            replyMessage += this.NEWLINE;
+            replyMessage += this.NEWLINE;
         }
 
-        let nameList = generated.names.join(NEWLINE);
+        let nameList = generated.names.join(this.NEWLINE);
 
         if(this.isMessageTooLong(nameList, replyMessage))
         {
@@ -62,7 +59,7 @@ class NameGenerationCommand extends CommandBase {
             while(isRemovingNames) {
                 generated.names.pop();
                 removedNames++;
-                nameList = generated.names.join(NEWLINE);
+                nameList = generated.names.join(this.NEWLINE);
 
                 if(!this.isMessageTooLong(nameList, replyMessage)) 
                     isRemovingNames = false;
