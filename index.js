@@ -1,7 +1,8 @@
 const extensionsInit = require('./extensions');
 const Discord = require('discord.js');
 const config = require('./config');
-const fs = require('fs');
+const commands = require('./commands');
+
 
 (function init() {
   const juan = new Discord.Client();
@@ -12,26 +13,11 @@ const fs = require('fs');
 
   juan.commands = new Map();
   juan.once('ready', () => {
-    const dir = './commands/';
-
-    fs.readdir(dir, (err, inFiles) => {
-      if (err) {
-        console.log(err);
-        process.exit();
-      } else {
-        const searchFiles = inFiles.filter(file => file.endsWith('Command.js'));
-        for (let i = 0; i < searchFiles.length; i++) {
-          const fileName = searchFiles[i];
-          try {
-            const Command = require(`./commands/${/(.*)\.js/.exec(fileName)[1]}`); // eslint-disable-line global-require,import/no-dynamic-require
-            const command = new Command(juan);
-            juan.commands.set(command.name, command);
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      }
-    });
+    juan.commands.set('help', new commands.HelpCommand(juan));
+    juan.commands.set('name',
+      new commands.NameGenerationCommand(juan,
+        new commands.ArgsParser(),
+        new commands.NameGeneratorRepository()));
   });
 
   juan.on('message', async (msg) => {

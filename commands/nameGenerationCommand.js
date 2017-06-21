@@ -1,5 +1,3 @@
-const NameGeneratorRepository = require('./namegenerator/generator/nameGeneratorRepository');
-const ArgsParser = require('./namegenerator/argsParser');
 const CommandBase = require('./commandBase');
 
 const DISCORD_MESSAGE_CHARACTER_LIMIT = 2000;
@@ -7,7 +5,7 @@ const REMOVE_TOKEN = '$#'; // arbitrary token to remove.
 const MESSAGE_TOO_LONG = `The list of names would exceed Discord's character limit. Removed ${REMOVE_TOKEN} names.`;
 
 class NameGenerationCommand extends CommandBase {
-  constructor(client) {
+  constructor(client, argsParser, nameGeneratorRepository) {
     const cmdTitle = 'name';
 
     super(client, {
@@ -16,8 +14,8 @@ class NameGenerationCommand extends CommandBase {
       description: 'Picks a name from a list of names based on race and gender.',
     });
 
-    this.argsParser = new ArgsParser();
-    this.nameGeneratorRepository = new NameGeneratorRepository();
+    this.argsParser = argsParser;
+    this.nameGeneratorRepository = nameGeneratorRepository;
   }
 
   async run(message, args) {

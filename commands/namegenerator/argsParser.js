@@ -28,7 +28,7 @@ class ArgsParser {
   //    randomization (even if it's something like 85% human 75% male or something .. tbd)
 
   parseArgs(inArgs) {
-    const args = inArgs.trim().split(' ').filter((arg) => arg);
+    const args = inArgs.trim().split(' ').filter(arg => arg);
     const parsedArgs = {
       races: [],
       genders: [],
