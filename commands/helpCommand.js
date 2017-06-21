@@ -37,7 +37,7 @@ class HelpCommand extends CommandBase {
     helpText += this.NEWLINE + this.NEWLINE;
     helpText += `Version ${pkge.version}`;
     helpText += this.NEWLINE;
-    helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url}${this.NEWLINE} \`\`\``;
+    helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url} \`\`\``;
 
     return this.send(helpText, message);
   }

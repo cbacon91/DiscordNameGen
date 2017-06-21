@@ -44,9 +44,9 @@ const fs = require('fs');
       ? config.discord.defaultPrefix // todo let guild set their own prefix.
       : '';
 
-    if (msg.content.startsWith(prefix))
+    if (msg.content.trim().startsWith(prefix))
       offset = prefix.length;
-    else if (msg.content.startsWith(juan.user.toString()))
+    else if (msg.content.trim().startsWith(juan.user.toString()))
       offset = juan.user.toString().length + 1;
     else
       return;
