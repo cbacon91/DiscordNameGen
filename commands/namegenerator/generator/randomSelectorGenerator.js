@@ -1,10 +1,6 @@
 const SeedDataRepository = require('./seed/seedDataRepository');
 
 class RandomSelectorGenerator extends SeedDataRepository {
-  constructor() {
-    super();
-  }
-
   generateName(args) {
     const generated = {
       names: [],

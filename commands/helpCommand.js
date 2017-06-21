@@ -1,7 +1,6 @@
 const config = require('../config'); // todo let's stop using ../../
 const pkge = require('../package');
-const CommandBase = require('../commandBase');
-
+const CommandBase = require('./commandBase');
 
 class HelpCommand extends CommandBase {
   constructor(client) {
@@ -14,14 +13,13 @@ class HelpCommand extends CommandBase {
     });
   }
 
+  // todo: enable 'help ${helpCmd} for more detail
   async run(message, args) {
     let prefix = '';
     if (message.guild)
       prefix = config.discord.defaultPrefix;
 
     let helpText = `\`\`\`asciidoc${this.NEWLINE}`;
-    helpText += `Format:${this.NEWLINE}`;
-    helpText += `CommandName :: Usage Example :: Description${this.NEWLINE}`;
     this.client.commands.forEach((command) => {
       helpText += prefix + command.name;
 
@@ -39,8 +37,7 @@ class HelpCommand extends CommandBase {
     helpText += this.NEWLINE + this.NEWLINE;
     helpText += `Version ${pkge.version}`;
     helpText += this.NEWLINE;
-    helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url}`;
-    helpText += '```';
+    helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url}${this.NEWLINE} \`\`\``;
 
     return this.send(helpText, message);
   }

@@ -1,6 +1,8 @@
+/* eslint-disable */
+//todo reenable eslint when implemented
 class MongoSeedRepository {
   getSeedData(args) {
-    throw 'not implemented';
+    throw new Error('not implemented');
   }
 }
 

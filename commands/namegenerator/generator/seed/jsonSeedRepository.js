@@ -16,7 +16,7 @@ class JsonSeedRepository {
       if (args.genders.length > 1)
         seedData.message += `Multiple genders specified: generating ${gender} names.${NEWLINE}`;
 
-      seedData.seeds = require(`./jsonSeedData/${race}${gender}`);
+      seedData.seeds = require(`./jsonSeedData/${race}${gender}`); // eslint-disable-line global-require,import/no-dynamic-require
     } catch (e) {
       seedData.error = e; // file not found, out of index, etc
     }

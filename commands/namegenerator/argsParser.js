@@ -1,3 +1,9 @@
+const NEWLINE = require('os').EOL;
+
+const MAX_NAME_COUNT = 50;
+const DEFAULT_GENDER = 'male';
+const DEFAULT_RACE = 'human';
+
 const dwarfKeys = ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'];
 const elfKeys = ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'];
 const hobbitsesKeys = ['h', 'halfling', 'hobbit', 'kender'];
@@ -10,19 +16,16 @@ const maleKeys = ['m', 'male', 'man', 'boy'];
 const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
 
-const NEWLINE = require('os').EOL;
-const MAX_NAME_COUNT = 50;
-const DEFAULT_GENDER = 'male';
-const DEFAULT_RACE = 'human';
-
 class ArgsParser {
   // todo with the parsing..
   // 5) building on 4), allow "half-elf" and "half-X", assume the other half is human
-  // 6) These lists should probably be mapped to a config, external json, or database-like file - hardcoding them feels dirty.
-  // 7) finally, right now the default is 'human male'. Should it be human male, or should it be random? Maybe it could be a
-  //      config setting? human male is good because human names should be applicable to other races (they're generic) and male
-  //      characters are generally more common than females (at least in the games I've played.. ), but there's a point to be
-  //      made for a randomization (even if it's something like 85% human 75% male or something .. tbd)
+  // 6) These lists should probably be mapped to a config, external json, or database-like file -
+  //    hardcoding them feels dirty.
+  // 7) finally, right now the default is 'human male'. Should it be human male, or should it be
+  //    random? Maybe it could be a config setting? human male is good because human names should be
+  //    applicable to other races (they're generic) and male characters are generally more common
+  //    than females (at least in the games I've played.. ), but there's a point to be made for a
+  //    randomization (even if it's something like 85% human 75% male or something .. tbd)
 
   parseArgs(inArgs) {
     const args = inArgs.split(' ');
@@ -41,8 +44,8 @@ class ArgsParser {
         else if (this.isRace(arg))
           parsedArgs.races.push(this.parseRace(arg));
         else if (this.isCount(arg)) {
-          if (parsedArgs.nameCount !== 1)
-            throw 'Already specified name count - can only take one name count!'; // throw in order to just end the loop
+          if (parsedArgs.nameCount !== 1) // throw in order to just end the loop
+            throw new Error('Already specified name count - can only take one name count!');
 
           parsedArgs.nameCount = this.parseCount(arg, parsedArgs);
         }
@@ -50,11 +53,13 @@ class ArgsParser {
       });
 
       if (!parsedArgs.genders.length) {
-        parsedArgs.genders.push(DEFAULT_GENDER); // default male; should this be random or should we supply both and let consumer decide?
+        // default male; should this be random or should we supply both and let consumer decide?
+        parsedArgs.genders.push(DEFAULT_GENDER);
         parsedArgs.message += `Gender not specified or found; using default (${DEFAULT_GENDER})${NEWLINE}`;
       }
       if (!parsedArgs.races.length) {
-        parsedArgs.races.push(DEFAULT_RACE); // default human; should this be random or should we supply all and let consumer decide?
+        // default human; should this be random or should we supply all and let consumer decide?
+        parsedArgs.races.push(DEFAULT_RACE);
         parsedArgs.message += `Race not specified or found; using default (${DEFAULT_RACE})${NEWLINE}`;
       }
     } catch (e) {

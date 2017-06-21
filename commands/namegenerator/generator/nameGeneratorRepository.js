@@ -11,9 +11,10 @@ const generators = {
 
 class NameGeneratorRepository {
   constructor() {
-    this.innerGenerator = generators[config.generator.type](); // should probably be DI instead of hardcoded like this
+    // should probably be DI instead of hardcoded like this
+    this.innerGenerator = generators[config.generator.type]();
     if (!this.innerGenerator)
-      throw `generator type ${config.generator.type} not implemented`;
+      throw new Error(`generator type ${config.generator.type} not implemented`);
   }
 
   generateName(args) {
