@@ -10,6 +10,7 @@ class CommandBase {
 		this.client = client;
 		this.name = cmdData.name;
 		this.description = cmdData.description;
+		this.usage = cmdData.usage;
 	}
 }
 
