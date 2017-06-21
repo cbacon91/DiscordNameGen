@@ -14,7 +14,8 @@ class NameGenerationCommand extends CommandBase {
 
         super(client, {
             name: cmdTitle,
-            description: "Picks a name from a list of names based on race and gender",
+            usage: 'name [Race ...] [Gender ...] [NameCount]',
+            description: "Picks a name from a list of names based on race and gender.",
         });
 
         this.nameGeneratorRepository = new NameGeneratorRepository();
