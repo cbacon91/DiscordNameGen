@@ -1,49 +1,49 @@
-const config = require('../config'); //todo let's stop using ../../
+const config = require('../config'); // todo let's stop using ../../
 const pkge = require('../package');
 const CommandBase = require('../commandBase');
 
 
 class HelpCommand extends CommandBase {
-    constructor(client) {
-        const cmdTitle = 'help';
+  constructor(client) {
+    const cmdTitle = 'help';
 
-        super(client, {
-            name: cmdTitle,
-            usage: 'help',
-            description: `Generates help and about information. You're reading it right meow.`,
-        });
-    }
+    super(client, {
+      name: cmdTitle,
+      usage: 'help',
+      description: 'Generates help and about information. You\'re reading it right meow.',
+    });
+  }
 
-    async run(message, args) {
-		let prefix = '';
-		if(message.guild) {
-			prefix = config.discord.defaultPrefix;
-		}
-        let helpText = '```asciidoc' + this.NEWLINE;
-        helpText += 'Format:' + this.NEWLINE;
-        helpText += 'CommandName :: Usage Example :: Description' + this.NEWLINE;
-        this.client.commands.forEach((command) => {
-			helpText += prefix + command.name;
+  async run(message, args) {
+    let prefix = '';
+    if (message.guild)
+      prefix = config.discord.defaultPrefix;
 
-            if(command.usage)
-                helpText += ` ::  ${command.usage}`                
+    let helpText = `\`\`\`asciidoc${this.NEWLINE}`;
+    helpText += `Format:${this.NEWLINE}`;
+    helpText += `CommandName :: Usage Example :: Description${this.NEWLINE}`;
+    this.client.commands.forEach((command) => {
+      helpText += prefix + command.name;
 
-            if(command.description)
-                helpText += ` ::  ${command.description}`                
-            
-            helpText += this.NEWLINE;
-		});
-        
-        helpText += this.NEWLINE;
-        helpText += '===============================';
-        helpText += this.NEWLINE + this.NEWLINE;
-        helpText += `Version ${pkge.version}`;
-        helpText += this.NEWLINE;
-        helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url}`;
-        helpText += '```';
+      if (command.usage)
+        helpText += ` ::  ${command.usage}`;
 
-        return this.send(helpText, message);
-    }
+      if (command.description)
+        helpText += ` ::  ${command.description}`;
+
+      helpText += this.NEWLINE;
+    });
+
+    helpText += this.NEWLINE;
+    helpText += '===============================';
+    helpText += this.NEWLINE + this.NEWLINE;
+    helpText += `Version ${pkge.version}`;
+    helpText += this.NEWLINE;
+    helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url}`;
+    helpText += '```';
+
+    return this.send(helpText, message);
+  }
 }
 
 module.exports = HelpCommand;
