@@ -8,17 +8,17 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
       message: '',
     };
 
-    const seed = super.getSeedData(args);
-    if (seed.error) {
-      generated.error = seed.error;
+    const seedData = super.getSeedData(args);
+    if (seedData.error) {
+      generated.error = seedData.error;
       return generated;
     }
-    if (seed.message)
-      generated.message += seed.message;
+    if (seedData.message)
+      generated.message += seedData.message;
 
     for (let i = 0; i < args.nameCount; i++) {
-      const selected = Math.randomInt(0, seed.seeds.length);
-      generated.names.push(seed.seeds[selected]);
+      const selected = Math.randomInt(0, seedData.seeds.length);
+      generated.names.push(seedData.seeds[selected]);
     }
 
     return generated;
