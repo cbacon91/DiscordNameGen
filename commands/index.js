@@ -1,11 +1,9 @@
 const HelpCommand = require('./helpCommand');
 const NameGenerationCommand = require('./nameGenerationCommand');
-const ArgsParser = require('./namegenerator/argsParser');
-const NameGeneratorRepository = require('./namegenerator/generator/nameGeneratorRepository');
+const argsParsers = require('./argsParsers');
 
 module.exports = {
   HelpCommand,
   NameGenerationCommand,
-  ArgsParser,
-  NameGeneratorRepository,
+  argsParsers,
 };

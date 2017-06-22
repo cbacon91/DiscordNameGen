@@ -16,7 +16,7 @@ const maleKeys = ['m', 'male', 'man', 'boy'];
 const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
 
-class ArgsParser {
+class NameGeneratorArgsParser {
   // todo with the parsing..
   // 5) building on 4), allow "half-elf" and "half-X", assume the other half is human
   // 6) These lists should probably be mapped to a config, external json, or database-like file -
@@ -114,4 +114,4 @@ class ArgsParser {
   }
 }
 
-module.exports = ArgsParser;
+module.exports = NameGeneratorArgsParser;

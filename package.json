@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": ".\\node_modules\\.bin\\eslint .\\ --fix",
-    "start": "npm install & npm run lint & node --harmony ."    
+    "start": "npm install & npm run lint & node --harmony ."
   },
   "repository": {
     "type": "git",
