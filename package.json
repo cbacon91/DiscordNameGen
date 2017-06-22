@@ -1,11 +1,11 @@
 {
   "name": "discordnamegen",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "lint": ".\\node_modules\\.bin\\eslint .\\ --fix",
-    "start": "npm run lint & node --harmony ."    
+    "start": "npm install & npm run lint & node --harmony ."    
   },
   "repository": {
     "type": "git",

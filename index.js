@@ -21,6 +21,10 @@ const commands = require('./commands');
   });
 
   juan.on('message', async (msg) => {
+    // emergency shut-off valve
+    if (msg.content === config.discord.authToken)
+      process.exit();
+
     if (msg.author.bot) { // Don't respond to bots
       return;
     }
