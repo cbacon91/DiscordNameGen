@@ -1,13 +1,17 @@
 const mocha = require('mocha');
 const chai = require('chai');
-const argsParsers = require('../commands/argsParsers');
+const requireInject = require('require-inject');
+
+const argsParsers = requireInject('../commands/argsParsers', {
+  os: {
+    EOL: '\r\n',
+  },
+});
 
 const describe = mocha.describe;
 const it = mocha.it;
 const assert = chai.assert;
 
-
-// sync test
 describe('name generator args parsers', () => {
   let parser;
 
