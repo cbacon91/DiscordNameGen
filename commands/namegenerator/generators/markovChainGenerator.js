@@ -1,11 +1,11 @@
 /* eslint-disable */
 //todo reenable eslint when implemented
 
-const SeedDataRepository = require('./seed/seedDataRepository');
+const seeds = require('./seeds');
 
-class MarkovChainGenerator extends SeedDataRepository {
-  constructor() {
-    super();
+class MarkovChainGenerator extends seeds.SeedDataRepository {
+  constructor(seedRepository) {
+    super(seedRepository);
   }
 
   generateName(args) {

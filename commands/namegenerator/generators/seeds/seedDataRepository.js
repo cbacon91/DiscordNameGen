@@ -10,8 +10,11 @@ const repositories = {
 };
 
 class SeedDataRepository {
-  constructor() {
-    // should probably be DI instead of hardcoded like this
+  constructor(innerRepository) {
+    if (!innerRepository)
+      throw new Error('inner seed repository not provided');
+
+
     this.innerRepository = repositories[config.generator.seedSource]();
     if (!this.innerRepository)
       throw new Error(`seed source ${config.generator.seedSource} not implemented`);

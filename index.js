@@ -3,9 +3,6 @@ const Discord = require('discord.js');
 const config = require('./config');
 
 const commands = require('./commands');
-// should we allow chaining here to keep index.js clean? ie, user does
-// commands.namegenerator.generators
-const generators = require('./commands/namegenerator/generators');
 
 (function init() {
   const juan = new Discord.Client();
@@ -28,7 +25,11 @@ const generators = require('./commands/namegenerator/generators');
     juan.commands.set('name',
       new commands.NameGenerationCommand(juan,
         new commands.argsParsers.NameGeneratorArgsParser(),
-        new generators.NameGeneratorRepository(getInnerNameGeneratorRepository())));
+        new commands.namegenerator.generators.NameGeneratorRepository(
+          getInnerNameGeneratorRepository(),
+        ),
+      ),
+    );
   }
 
   async function onMessage(msg) {
@@ -37,7 +38,7 @@ const generators = require('./commands/namegenerator/generators');
       process.exit();
     }
 
-    if (msg.author.bot) // Don't respond to bots
+    if (msg.author.bot)
       return;
 
     let offset;
@@ -49,7 +50,7 @@ const generators = require('./commands/namegenerator/generators');
       offset = prefix.length;
     else if (msg.content.trim().startsWith(juan.user.toString()))
       offset = juan.user.toString().length + 1;
-    else
+    else // if message doesn't start with the prefix or an @mention, just ignore their message.
       return;
 
     const userInput = msg.content.substring(offset).split(' ')[0].toLowerCase();
@@ -64,12 +65,37 @@ const generators = require('./commands/namegenerator/generators');
 
   // todo move to another file; index.js shouldn't do all of this
   function getInnerNameGeneratorRepository() {
+    const generators = commands.namegenerator.generators;
     const innerGenerators = {
-      randomSelector: () => new generators.RandomSelectorGenerator(),
-      markovChain: () => new generators.MarkovChainGenerator(),
+      randomSelector: () => new generators.RandomSelectorGenerator(
+        getSeedRepository(),
+      ),
+      markovChain: () => new generators.MarkovChainGenerator(
+        getSeedRepository(),
+      ),
       api: () => new generators.ApiGenerator(),
     };
 
-    return innerGenerators[config.generator.type]();
+    const innerRepositoryCtor = innerGenerators[config.generator.type];
+    if (!innerRepositoryCtor)
+      throw new Error(`generation type ${config.generator.type} not implemented`);
+
+    return innerRepositoryCtor();
+  }
+
+  function getSeedRepository() {
+    const seeds = commands.namegenerator.generators.seeds;
+
+    const repositories = {
+      json: () => new seeds.JsonSeedRepository(),
+      mongo: () => new seeds.MongoSeedRepository(),
+      api: () => new seeds.ApiSeedRepository(),
+    };
+
+    const innerRepositoryCtor = repositories[config.generator.seedSource];
+    if (!innerRepositoryCtor)
+      throw new Error(`seed source ${config.generator.seedSource} not implemented`);
+
+    return innerRepositoryCtor();
   }
 }());

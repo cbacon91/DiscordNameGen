@@ -1,6 +1,6 @@
-const SeedDataRepository = require('./seed/seedDataRepository');
+const seeds = require('./seeds');
 
-class RandomSelectorGenerator extends SeedDataRepository {
+class RandomSelectorGenerator extends seeds.SeedDataRepository {
   generateName(args) {
     const generated = {
       names: [],
