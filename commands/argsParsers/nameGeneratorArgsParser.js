@@ -6,10 +6,10 @@ const DEFAULT_RACE = 'human';
 
 const dwarfKeys = ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'];
 const elfKeys = ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'];
-const hobbitsesKeys = ['h', 'halfling', 'hobbit', 'kender'];
+const hobbitsesKeys = ['h', 'halfling', 'hobbit', 'kender', 'half'];
 const orcKeys = ['o', 'orc', 'ork', 'orcish', 'orkish'];
 const gnomeKeys = ['g', 'gnome', 'gnomish'];
-const humanKeys = ['human', 'person', 'half'];
+const humanKeys = ['human', 'person', 's', 'n'];
 const raceKeys = dwarfKeys.concat(elfKeys, hobbitsesKeys, orcKeys, gnomeKeys, humanKeys);
 
 const maleKeys = ['m', 'male', 'man', 'boy'];
