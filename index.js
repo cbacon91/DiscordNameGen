@@ -26,7 +26,7 @@ const commands = require('./commands');
       new commands.NameGenerationCommand(juan,
         new commands.argsParsers.NameGeneratorArgsParser(),
         new commands.namegenerator.generators.NameGeneratorRepository(
-          getInnerNameGeneratorRepository(),
+          getInnerNameGeneratorRepository(config),
         ),
       ),
     );
@@ -64,26 +64,26 @@ const commands = require('./commands');
   }
 
   // todo move to another file; index.js shouldn't do all of this
-  function getInnerNameGeneratorRepository() {
+  function getInnerNameGeneratorRepository(configuration) {
     const generators = commands.namegenerator.generators;
     const innerGenerators = {
       randomSelector: () => new generators.RandomSelectorGenerator(
-        getSeedRepository(),
+        getSeedRepository(configuration),
       ),
       markovChain: () => new generators.MarkovChainGenerator(
-        getSeedRepository(),
+        getSeedRepository(configuration),
       ),
       api: () => new generators.ApiGenerator(),
     };
 
-    const innerRepositoryCtor = innerGenerators[config.generator.type];
+    const innerRepositoryCtor = innerGenerators[configuration.generator.type];
     if (!innerRepositoryCtor)
-      throw new Error(`generation type ${config.generator.type} not implemented`);
+      throw new Error(`generation type ${configuration.generator.type} not implemented`);
 
     return innerRepositoryCtor();
   }
 
-  function getSeedRepository() {
+  function getSeedRepository(configuration) {
     const seeds = commands.namegenerator.generators.seeds;
 
     const repositories = {
@@ -92,9 +92,9 @@ const commands = require('./commands');
       api: () => new seeds.ApiSeedRepository(),
     };
 
-    const innerRepositoryCtor = repositories[config.generator.seedSource];
+    const innerRepositoryCtor = repositories[configuration.generator.seedSource];
     if (!innerRepositoryCtor)
-      throw new Error(`seed source ${config.generator.seedSource} not implemented`);
+      throw new Error(`seed source ${configuration.generator.seedSource} not implemented`);
 
     return innerRepositoryCtor();
   }

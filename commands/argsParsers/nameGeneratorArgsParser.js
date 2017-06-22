@@ -63,7 +63,7 @@ class NameGeneratorArgsParser {
         parsedArgs.message += `Race not specified or found; using default (${DEFAULT_RACE})${NEWLINE}`;
       }
     } catch (e) {
-      parsedArgs.error = e; // if there is an error, just get out of here
+      parsedArgs.error = e.message; // if there is an error, just get out of here
     }
     return parsedArgs;
   }
