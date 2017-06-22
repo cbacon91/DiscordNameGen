@@ -1,3 +1,5 @@
+/* eslint-disable no-new */
+//disable no-new because ctors blowing up is a reasonable test imo
 const mocha = require('mocha');
 const chai = require('chai');
 const requireInject = require('require-inject');
@@ -8,7 +10,7 @@ const seeds = requireInject('../commands/namegenerator/generators/seeds', {
     EOL: '\r\n',
   },
   fs: {
-    readFileSync: (a, b) => ['juan', 'charles'],
+    readFileSync: (a, b) => '["juan", "charles"]',
   },
 });
 
@@ -36,15 +38,64 @@ describe('seed data repository (container)', () => {
 });
 
 describe('json seed repository', () => {
-  it('te', () => {
-    const repo = new seeds.JsonSeedRepository();
+  let repo;
 
+  mocha.beforeEach(() => {
+    repo = new seeds.JsonSeedRepository();
+  });
+
+  mocha.afterEach(() => {
+    repo = null;
+  });
+
+  it('should return error without args', () => {
+    const seedData = repo.getSeedData();
+    assert.strictEqual(seedData.error, 'args must be provided to generate seed data');
+  });
+  
+  it('should return error without race args', () => {
+    const seedData = repo.getSeedData({
+      genders: ['male']
+    });
+    assert.strictEqual(seedData.error, 'at least one race must be provided to generate see data');
+  });
+  
+  it('should return error without gender args', () => {
+    const seedData = repo.getSeedData({
+      races: ['dwarf']
+    });
+    assert.strictEqual(seedData.error, 'at least one gender must be provided to generate seed data');
+  });
+
+  it('should return a message for multiple races', () => {
+    const seedData = repo.getSeedData({
+      races: ['human', 'elf'],
+      genders: ['male'],
+    });
+
+    assert.isTrue(seedData.message.includes('Multiple races specified: generating '));
+  });
+  
+  it('should return a message for multiple genders', () => {
+    const seedData = repo.getSeedData({
+      races: ['human'],
+      genders: ['male', 'female'],
+    });
+
+    assert.isTrue(seedData.message.includes('Multiple genders specified: generating '));
+  });
+
+  it('should return seed data with valid args', () => {
     const seedData = repo.getSeedData({
       races: ['human'],
       genders: ['male'],
     });
 
-    console.log(seedData);
+    assert.deepEqual(seedData.seeds, [
+      'juan',
+      'charles'
+    ]);
+
   });
 });
 
