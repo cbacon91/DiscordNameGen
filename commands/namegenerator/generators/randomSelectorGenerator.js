@@ -2,6 +2,9 @@ const seeds = require('./seeds');
 
 class RandomSelectorGenerator extends seeds.SeedDataRepository {
   generateName(args) {
+    if (!args)
+      throw new Error('args must be provided to generate name');
+
     const generated = {
       names: [],
       error: '',

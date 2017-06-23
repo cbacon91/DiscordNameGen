@@ -7,6 +7,9 @@ class NameGeneratorRepository {
   }
 
   generateName(args) {
+    if (!args)
+      throw new Error('args must be supplied to generate a new name');
+
     return this.innerGenerator.generateName(args);
   }
 }

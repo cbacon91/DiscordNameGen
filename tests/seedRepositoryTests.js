@@ -1,5 +1,5 @@
 /* eslint-disable no-new */
-//disable no-new because ctors blowing up is a reasonable test imo
+// disable no-new because ctors blowing up is a reasonable test imo
 const mocha = require('mocha');
 const chai = require('chai');
 const requireInject = require('require-inject');
@@ -10,7 +10,7 @@ const seeds = requireInject('../commands/namegenerator/generators/seeds', {
     EOL: '\r\n',
   },
   fs: {
-    readFileSync: (a, b) => { return '["juan", "charles"]'; },
+    readFileSync: (a, b) => '["juan", "charles"]',
   },
 });
 
@@ -52,17 +52,17 @@ describe('json seed repository', () => {
     const seedData = repo.getSeedData();
     assert.strictEqual(seedData.error, 'args must be provided to generate seed data');
   });
-  
+
   it('should return error without race args', () => {
     const seedData = repo.getSeedData({
-      genders: ['male']
+      genders: ['male'],
     });
     assert.strictEqual(seedData.error, 'at least one race must be provided to generate see data');
   });
-  
+
   it('should return error without gender args', () => {
     const seedData = repo.getSeedData({
-      races: ['dwarf']
+      races: ['dwarf'],
     });
     assert.strictEqual(seedData.error, 'at least one gender must be provided to generate seed data');
   });
@@ -75,7 +75,7 @@ describe('json seed repository', () => {
 
     assert.isTrue(seedData.message.includes('Multiple races specified: generating '));
   });
-  
+
   it('should return a message for multiple genders', () => {
     const seedData = repo.getSeedData({
       races: ['human'],
@@ -93,9 +93,8 @@ describe('json seed repository', () => {
 
     assert.deepEqual(seedData.seeds, [
       'juan',
-      'charles'
+      'charles',
     ]);
-
   });
 });
 

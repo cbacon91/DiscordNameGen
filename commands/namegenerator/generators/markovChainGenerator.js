@@ -5,6 +5,7 @@ const seeds = require('./seeds');
 class MarkovChainGenerator extends seeds.SeedDataRepository {
   constructor(seedRepository) {
     super(seedRepository);
+    throw new Error('not implemented');
   }
 
   generateName(args) {

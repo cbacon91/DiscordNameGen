@@ -25,7 +25,7 @@ class JsonSeedRepository {
       if (args.genders.length > 1)
         seedData.message += `Multiple genders specified: generating ${gender} names.${NEWLINE}`;
 
-      //todo async?
+      // todo async?
       seedData.seeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${race}${gender}.json`, 'utf8'));
     } catch (e) {
       seedData.error = e.message;
