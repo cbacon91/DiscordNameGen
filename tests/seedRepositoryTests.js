@@ -10,7 +10,7 @@ const seeds = requireInject('../commands/namegenerator/generators/seeds', {
     EOL: '\r\n',
   },
   fs: {
-    readFileSync: (a, b) => '["juan", "charles"]',
+    readFileSync: (a, b) => { return '["juan", "charles"]'; },
   },
 });
 
