@@ -21,15 +21,17 @@ class CommandBase {
     try {
       return originalCommand.channel
         .send(messageText)
-        .then((t) => {
+        .then(t => t
           // is it necessary to do anything on success?
           // long-term - log these so I can see what is most common?
-          return t; // just return the message back, useful for testing at least
-        }, (r) => {
-          Logger.log(`Failed on replying :: Original message: "${originalCommand.content}" :: Error: "${r}"`);
-        });
+          // just return the message back, useful for testing at least
+          , (r) => {
+            Logger.log(`Failed on replying :: Original message: "${originalCommand.content}" :: Error: "${r}"`);
+            return r;
+          });
     } catch (e) {
       Logger.log(e);
+      return e;
     }
   }
 }

@@ -3,3 +3,5 @@ class Logger {
     console.log(msg);
   }
 }
+
+module.exports = Logger;

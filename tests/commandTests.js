@@ -12,9 +12,9 @@ const commands = requireInject('../commands', {
   },
   '../logger': {
     log: (msg) => {
-      lastLoggedMsg = msg; 
-    }
-  }
+      lastLoggedMsg = msg;
+    },
+  },
 });
 
 extensions(); // load up Math.randomInt
@@ -23,13 +23,13 @@ const describe = mocha.describe;
 const it = mocha.it;
 const assert = chai.assert;
 
-mocha.beforeEach(() => { 
+mocha.beforeEach(() => {
   lastLoggedMsg = '';
 });
 
 mocha.afterEach(() => {
   lastLoggedMsg = '';
-})
+});
 
 describe('command base', () => {
   it('should throw error when not provided client', () => {
@@ -52,41 +52,37 @@ describe('command base', () => {
 
   it('should reply successfully', () => {
     const base = new commands.CommandBase({}, {
-      name: 'test'
+      name: 'test',
     });
     const cmdMock = {
       channel: {
-        send: (msg) => {
-          return Promise.resolve(msg);
-        }
-      }
+        send: msg => Promise.resolve(msg),
+      },
     };
 
     return base
       .send('test msg', cmdMock)
       .then((reply) => {
         assert.strictEqual(reply, 'test msg');
-      });  
+      });
   });
 
   it('should log error if error', () => {
     const base = new commands.CommandBase({}, {
       name: 'test',
-      content: 'command'
     });
     const cmdMock = {
       channel: {
-        send: (msg) => {
-          return Promise.reject(msg);
-        }
-      }
+        send: msg => Promise.reject(msg),
+      },
+      content: 'command',
     };
 
     return base
       .send('test msg', cmdMock)
       .then(() => {
-        //success cb; it failed, ignore 
+        // success cb; it failed, ignore
         assert.strictEqual(lastLoggedMsg, 'Failed on replying :: Original message: "command" :: Error: "test msg"');
-      });  
+      });
   });
 });
