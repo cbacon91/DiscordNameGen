@@ -1,4 +1,5 @@
 const newline = require('os').EOL;
+const Logger = require('../logger');
 
 class CommandBase {
   constructor(client, cmdData) {
@@ -18,16 +19,17 @@ class CommandBase {
 
   send(messageText, originalCommand) {
     try {
-      originalCommand.channel
+      return originalCommand.channel
         .send(messageText)
         .then((t) => {
           // is it necessary to do anything on success?
           // long-term - log these so I can see what is most common?
+          return t; // just return the message back, useful for testing at least
         }, (r) => {
-          console.log(`Failed on replying :: Original message: "${originalCommand.content}" :: Error: "${r}"`);
+          Logger.log(`Failed on replying :: Original message: "${originalCommand.content}" :: Error: "${r}"`);
         });
     } catch (e) {
-      console.log(e);
+      Logger.log(e);
     }
   }
 }

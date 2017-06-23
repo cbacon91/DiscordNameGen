@@ -1,22 +1,92 @@
-// const mocha = require('mocha');
-// const chai = require('chai');
+/* eslint-disable no-new */
+// disable no-new because ctors blowing up is a reasonable test imo
+const mocha = require('mocha');
+const chai = require('chai');
+const requireInject = require('require-inject');
+const extensions = require('../extensions');
 
-// const describe = mocha.describe;
-// const it = mocha.it;
-// const assert = chai.assert;
+let lastLoggedMsg = '';
+const commands = requireInject('../commands', {
+  os: {
+    EOL: '\r\n',
+  },
+  '../logger': {
+    log: (msg) => {
+      lastLoggedMsg = msg; 
+    }
+  }
+});
 
-// //sync test
-// describe('test-test', () => {
-//   it('should be success', () => {
-//     assert.strictEqual(1, 1);
-//   });
-// });
+extensions(); // load up Math.randomInt
 
-// //async
-// // describe('async test', () => {
-// //     it('should be an async test', (done) => {
-// //         //do async thing
-// //         //call done() when complete
-// //         //call done ( err ) when completed with error
-// //     });
-// // })
+const describe = mocha.describe;
+const it = mocha.it;
+const assert = chai.assert;
+
+mocha.beforeEach(() => { 
+  lastLoggedMsg = '';
+});
+
+mocha.afterEach(() => {
+  lastLoggedMsg = '';
+})
+
+describe('command base', () => {
+  it('should throw error when not provided client', () => {
+    assert.throws(() => {
+      new commands.CommandBase(null, {});
+    });
+  });
+
+  it('should throw error when not provided cmdData', () => {
+    assert.throws(() => {
+      new commands.CommandBase({}, null);
+    });
+  });
+
+  it('should throw error when not provided cmdData.name', () => {
+    assert.throws(() => {
+      new commands.CommandBase({}, {});
+    });
+  });
+
+  it('should reply successfully', () => {
+    const base = new commands.CommandBase({}, {
+      name: 'test'
+    });
+    const cmdMock = {
+      channel: {
+        send: (msg) => {
+          return Promise.resolve(msg);
+        }
+      }
+    };
+
+    return base
+      .send('test msg', cmdMock)
+      .then((reply) => {
+        assert.strictEqual(reply, 'test msg');
+      });  
+  });
+
+  it('should log error if error', () => {
+    const base = new commands.CommandBase({}, {
+      name: 'test',
+      content: 'command'
+    });
+    const cmdMock = {
+      channel: {
+        send: (msg) => {
+          return Promise.reject(msg);
+        }
+      }
+    };
+
+    return base
+      .send('test msg', cmdMock)
+      .then(() => {
+        //success cb; it failed, ignore 
+        assert.strictEqual(lastLoggedMsg, 'Failed on replying :: Original message: "command" :: Error: "test msg"');
+      });  
+  });
+});
