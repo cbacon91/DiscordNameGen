@@ -86,3 +86,183 @@ describe('command base', () => {
       });
   });
 });
+
+describe('name generation command', () => {
+  it('should return early with error message if parsedArgs have error', () => {
+    const generator = {};
+    const argsParserMock = {
+      parseArgs: args => ({
+        error: 'error',
+      }),
+    };
+
+    const userCommandRequest = {
+      channel: {
+        send: msg => Promise.resolve(msg),
+      },
+      content: 'command',
+    };
+
+    const command = new commands.NameGenerationCommand({}, argsParserMock, generator);
+
+    return command
+      .run(userCommandRequest, 'error me papi')
+      .then((r) => {
+        assert.strictEqual(r, '**error**');
+      });
+  });
+
+  it('should return early with error message if generated has error', () => {
+    const generator = {
+      generateName: args => ({
+        error: 'error',
+      }),
+    };
+    const argsParserMock = {
+      parseArgs: args => ({
+      }),
+    };
+
+    const userCommandRequest = {
+      channel: {
+        send: msg => Promise.resolve(msg),
+      },
+      content: 'command',
+    };
+
+    const command = new commands.NameGenerationCommand({}, argsParserMock, generator);
+
+    return command
+      .run(userCommandRequest, 'error me papi')
+      .then((r) => {
+        assert.strictEqual(r, '**error**');
+      });
+  });
+
+  it('should include message if message comes from args', () => {
+    const generator = {
+      generateName: args => ({
+        message: '',
+        names: [],
+      }),
+    };
+    const argsParserMock = {
+      parseArgs: args => ({
+        message: 'message\r\n',
+      }),
+    };
+
+    const userCommandRequest = {
+      channel: {
+        send: msg => Promise.resolve(msg),
+      },
+      content: 'message',
+    };
+
+    const command = new commands.NameGenerationCommand({}, argsParserMock, generator);
+
+    return command
+      .run(userCommandRequest, '')
+      .then((r) => {
+        assert.include(r, 'message');
+      });
+  });
+
+  it('should include message if message comes from generated', () => {
+    const generator = {
+      generateName: args => ({
+        message: 'message/r/n',
+        names: [],
+      }),
+    };
+    const argsParserMock = {
+      parseArgs: args => ({
+        message: '',
+      }),
+    };
+
+    const userCommandRequest = {
+      channel: {
+        send: msg => Promise.resolve(msg),
+      },
+      content: 'message',
+    };
+
+    const command = new commands.NameGenerationCommand({}, argsParserMock, generator);
+
+    return command
+      .run(userCommandRequest, '')
+      .then((r) => {
+        assert.include(r, 'message');
+      });
+  });
+
+  it('should have generated names in response message', () => {
+    const generator = {
+      generateName: args => ({
+        message: '',
+        names: ['juan', 'charles', 'mikhail'],
+      }),
+    };
+    const argsParserMock = {
+      parseArgs: args => ({
+        message: '',
+      }),
+    };
+
+    const userCommandRequest = {
+      channel: {
+        send: msg => Promise.resolve(msg),
+      },
+      content: 'message',
+    };
+
+    const command = new commands.NameGenerationCommand({}, argsParserMock, generator);
+
+    return command
+      .run(userCommandRequest, '')
+      .then((r) => {
+        assert.strictEqual(r, 'juan\r\ncharles\r\nmikhail');
+      });
+  });
+
+  it('should pop names if return message too long and include message', () => {
+    let name2000CharactersLong = 'a';
+    for (let i = 0; i < 2000; i++)
+      name2000CharactersLong += 'a';
+
+    const generator = {
+      generateName: args => ({
+        message: '',
+        names: [
+          'juan',
+          'charles',
+          name2000CharactersLong,
+        ],
+      }),
+    };
+
+    const argsParserMock = {
+      parseArgs: args => ({
+        message: '',
+      }),
+    };
+
+    const userCommandRequest = {
+      channel: {
+        send: msg => Promise.resolve(msg),
+      },
+      content: 'message',
+    };
+
+    const command = new commands.NameGenerationCommand({}, argsParserMock, generator);
+
+    return command
+      .run(userCommandRequest, '')
+      .then((r) => {
+        assert.notInclude(r, name2000CharactersLong);
+        assert.include(r, 'juan\r\ncharles');
+        assert.include(r, "*The list of names would exceed Discord's character limit. Removed 1 name(s).*");
+      });
+  });
+});
