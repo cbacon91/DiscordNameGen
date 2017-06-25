@@ -17,12 +17,15 @@ class JsonSeedRepository {
       if (!args.genders || !args.genders.length)
         throw new Error('at least one gender must be provided to generate seed data');
 
-      const race = args.races[Math.randomInt(0, args.races.length)];
-      const gender = args.genders[Math.randomInt(0, args.genders.length)];
+      const uniqueRaces = [...new Set(args.races)];
+      const uniqueGenders = [...new Set(args.genders)];
 
-      if (args.races.length > 1)
+      const race = uniqueRaces[Math.randomInt(0, uniqueRaces.length)];
+      const gender = uniqueGenders[Math.randomInt(0, uniqueGenders.length)];
+
+      if (uniqueRaces.length > 1)
         seedData.message += `Multiple races specified: generating ${race} names.${NEWLINE}`;
-      if (args.genders.length > 1)
+      if (uniqueGenders.length > 1)
         seedData.message += `Multiple genders specified: generating ${gender} names.${NEWLINE}`;
 
       // todo async?

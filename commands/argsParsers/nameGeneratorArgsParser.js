@@ -42,7 +42,7 @@ class NameGeneratorArgsParser {
         if (this.isGender(arg))
           parsedArgs.genders.push(this.parseGender(arg));
         else if (this.isRace(arg))
-          parsedArgs.races.push(this.parseRace(arg));
+          parsedArgs.races = parsedArgs.races.concat(this.parseRaces(arg));
         else if (this.isCount(arg)) {
           if (parsedArgs.nameCount !== 1) // throw in order to just end the loop
             throw new Error('Already specified name count - can only take one name count!');
@@ -95,22 +95,37 @@ class NameGeneratorArgsParser {
   }
 
   isRace(inArg) {
-    return raceKeys.includes(inArg);
+    return raceKeys.includes(inArg) || this.isHalfbreed(inArg);
   }
 
-  parseRace(inArg) {
-    if (dwarfKeys.includes(inArg))
-      return 'dwarf';
-    else if (elfKeys.includes(inArg))
-      return 'elf';
-    else if (hobbitsesKeys.includes(inArg))
-      return 'halfling';
-    else if (orcKeys.includes(inArg))
-      return 'orc';
-    else if (gnomeKeys.includes(inArg))
-      return 'gnome';
+  isHalfbreed(inArg) {
+    return typeof inArg === 'string' && inArg.startsWith('half') && inArg !== 'halfling';
+  }
 
-    return 'human'; // default to human; should this be random?
+  parseRaces(inArg) {
+    if (this.isHalfbreed(inArg))
+      return this.parseHalfbreedRace(inArg);
+
+    if (dwarfKeys.includes(inArg))
+      return ['dwarf'];
+    else if (elfKeys.includes(inArg))
+      return ['elf'];
+    else if (hobbitsesKeys.includes(inArg))
+      return ['halfling'];
+    else if (orcKeys.includes(inArg))
+      return ['orc'];
+    else if (gnomeKeys.includes(inArg))
+      return ['gnome'];
+
+    return ['human']; // default to human; should this be random?
+  }
+
+  parseHalfbreedRace(inArg) {
+    let race = inArg.substring('half'.length, inArg.length);
+    if (race.startsWith('-'))
+      race = race.substring(1, race.length);
+
+    return ['human'].concat(this.parseRaces(race));
   }
 }
 

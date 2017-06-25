@@ -59,18 +59,26 @@ describe('name generator args parsers', () => {
   });
 
   it('should parse race given correct input', () => {
-    assert.strictEqual(parser.parseRace('d'), 'dwarf');
-    assert.strictEqual(parser.parseRace('dwarf'), 'dwarf');
-    assert.strictEqual(parser.parseRace('halfling'), 'halfling');
-    assert.strictEqual(parser.parseRace('hobbit'), 'halfling');
+    assert.deepEqual(parser.parseRaces('d'), ['dwarf']);
+    assert.deepEqual(parser.parseRaces('dwarf'), ['dwarf']);
+    assert.deepEqual(parser.parseRaces('halfling'), ['halfling']);
+    assert.deepEqual(parser.parseRaces('hobbit'), ['halfling']);
+  });
+
+  it('should parse human and halfrace for half-elf and halfelf', () => {
+    assert.deepEqual(parser.parseRaces('half-elf'), ['human', 'elf']);
+    assert.deepEqual(parser.parseRaces('halfelf'), ['human', 'elf']);
+    assert.deepEqual(parser.parseRaces('half-dwarf'), ['human', 'dwarf']);
+    assert.deepEqual(parser.parseRaces('halfhalfling'), ['human', 'halfling']);
+    
   });
 
   // is this test invalid? do we want it to random given bad input?
   it('should default to human given bad race input', () => {
-    assert.strictEqual(parser.parseRace('bruh'), 'human');
-    // should parseRace throw error if not given a string?
-    assert.strictEqual(parser.parseRace({}), 'human');
-    assert.strictEqual(parser.parseRace([]), 'human');
+    // should parseRaces throw error if not given a string?
+    assert.deepEqual(parser.parseRaces('bruh'), ['human']);
+    assert.deepEqual(parser.parseRaces({}), ['human']);
+    assert.deepEqual(parser.parseRaces([]), ['human']);
   });
 
   it('should parse gender given correct input', () => {
@@ -84,7 +92,7 @@ describe('name generator args parsers', () => {
   it('should default to male given bad input', () => {
     assert.strictEqual(parser.parseGender('bruh'), 'male');
     assert.strictEqual(parser.parseGender('chickadee'), 'male');
-    // should parseRace throw error if not given a string?
+    // should parseRaces throw error if not given a string?
     assert.strictEqual(parser.parseGender({}), 'male');
   });
 

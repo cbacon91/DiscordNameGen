@@ -22,14 +22,10 @@ const commands = require('./commands');
   function onReady() {
     juan.commands = new Map();
     juan.commands.set('help', new commands.HelpCommand(juan));
-    juan.commands.set('name',
-      new commands.NameGenerationCommand(juan,
-        new commands.argsParsers.NameGeneratorArgsParser(),
-        new commands.namegenerator.generators.NameGeneratorRepository(
-          getInnerNameGeneratorRepository(config),
-        ),
-      ),
-    );
+    juan.commands.set('name', new commands.NameGenerationCommand(juan,
+      new commands.argsParsers.NameGeneratorArgsParser(),
+      new commands.namegenerator.generators.NameGeneratorRepository(
+        getInnerNameGeneratorRepository(config))));
   }
 
   async function onMessage(msg) {
@@ -68,11 +64,9 @@ const commands = require('./commands');
     const generators = commands.namegenerator.generators;
     const innerGenerators = {
       randomSelector: () => new generators.RandomSelectorGenerator(
-        getSeedRepository(configuration),
-      ),
+        getSeedRepository(configuration)),
       markovChain: () => new generators.MarkovChainGenerator(
-        getSeedRepository(configuration),
-      ),
+        getSeedRepository(configuration)),
       api: () => new generators.ApiGenerator(),
     };
 
