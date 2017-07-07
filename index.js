@@ -26,6 +26,8 @@ const commands = require('./commands');
       new commands.argsParsers.NameGeneratorArgsParser(),
       new commands.namegenerator.generators.NameGeneratorRepository(
         getInnerNameGeneratorRepository(config))));
+
+    console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
   }
 
   async function onMessage(msg) {

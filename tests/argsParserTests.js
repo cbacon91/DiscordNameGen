@@ -70,7 +70,6 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parser.parseRaces('halfelf'), ['human', 'elf']);
     assert.deepEqual(parser.parseRaces('half-dwarf'), ['human', 'dwarf']);
     assert.deepEqual(parser.parseRaces('halfhalfling'), ['human', 'halfling']);
-    
   });
 
   // is this test invalid? do we want it to random given bad input?
