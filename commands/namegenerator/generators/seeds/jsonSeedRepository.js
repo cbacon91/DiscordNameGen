@@ -1,5 +1,6 @@
 const NEWLINE = require('os').EOL;
-const fs = require('fs');
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
 
 class JsonSeedRepository {
   validateArgs(args) {
@@ -22,13 +23,13 @@ class JsonSeedRepository {
       const uniqueRaces = [...new Set(args.races)];
       const uniqueGenders = [...new Set(args.genders)];
 
-      const race = uniqueRaces[Math.randomInt(0, uniqueRaces.length)];
-      const gender = uniqueGenders[Math.randomInt(0, uniqueGenders.length)];
+      seedData.selectedRace = uniqueRaces[Math.randomInt(0, uniqueRaces.length)];
+      seedData.selectedGender = uniqueGenders[Math.randomInt(0, uniqueGenders.length)];
 
       if (uniqueRaces.length > 1)
-        seedData.message += `Multiple races specified: generating ${race} names.${NEWLINE}`;
+        seedData.message += `Multiple races specified: generating ${seedData.selectedRace} names.${NEWLINE}`;
       if (uniqueGenders.length > 1)
-        seedData.message += `Multiple genders specified: generating ${gender} names.${NEWLINE}`;
+        seedData.message += `Multiple genders specified: generating ${seedData.selectedGender} names.${NEWLINE}`;
     } catch (e) {
       seedData.error = e.message;
     }
@@ -50,8 +51,16 @@ class JsonSeedRepository {
     if (seedData.error)
       return seedData;
 
-    seedData.seeds = JSON.parse(await fs.readFile(`${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`, 'utf8'));
-    return seedData;
+    const fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`;
+    return fs.readFileAsync(fileName, 'utf8').then((seeds) => {
+      seedData.seeds = seeds;
+      return seedData;
+    }).catch((err) => {
+      console.log(`Error while generating seed data for JsonSeedRepository. ${NEWLINE}Filename: ${fileName} ${NEWLINE}Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`)
+      console.log(err);
+      seedData.error = 'An error occurred while generating seed data for name generation. This has been logged and will be fixed soon:tm:.';
+      return seedData;
+    });
   }
 }
 
