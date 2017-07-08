@@ -1,4 +1,4 @@
-const config = require('../config'); // todo let's stop using ../../
+const config = require('../config');
 const pkge = require('../package');
 const CommandBase = require('./commandBase');
 
@@ -35,9 +35,8 @@ class HelpCommand extends CommandBase {
     helpText += this.NEWLINE;
     helpText += '===============================';
     helpText += this.NEWLINE + this.NEWLINE;
-    helpText += `Version ${pkge.version}`;
-    helpText += this.NEWLINE;
-    helpText += `Bugs? Questions? Drop an issue at my GitHub - ${pkge.bugs.url} \`\`\``;
+    helpText += `Version ${pkge.version} \`\`\``;
+    helpText += `Bugs? Questions? Feel free to contact my creator directly at ${config.discord.devServer}`;
 
     return this.send(helpText, message);
   }

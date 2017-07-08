@@ -6,17 +6,17 @@ const DEFAULT_RACE = 'human';
 
 const dwarfKeys = ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'];
 const elfKeys = ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'];
-const hobbitsesKeys = ['h', 'halfling', 'hobbit', 'kender'];
+const hobbitsesKeys = ['h', 'halfling', 'hobbit', 'kender', 'half'];
 const orcKeys = ['o', 'orc', 'ork', 'orcish', 'orkish'];
 const gnomeKeys = ['g', 'gnome', 'gnomish'];
-const humanKeys = ['human', 'person', 'half'];
+const humanKeys = ['human', 'person', 's', 'n'];
 const raceKeys = dwarfKeys.concat(elfKeys, hobbitsesKeys, orcKeys, gnomeKeys, humanKeys);
 
 const maleKeys = ['m', 'male', 'man', 'boy'];
 const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
 
-class ArgsParser {
+class NameGeneratorArgsParser {
   // todo with the parsing..
   // 5) building on 4), allow "half-elf" and "half-X", assume the other half is human
   // 6) These lists should probably be mapped to a config, external json, or database-like file -
@@ -28,7 +28,7 @@ class ArgsParser {
   //    randomization (even if it's something like 85% human 75% male or something .. tbd)
 
   parseArgs(inArgs) {
-    const args = inArgs.trim().split(' ').filter((arg) => arg);
+    const args = inArgs.trim().split(' ').filter(arg => arg);
     const parsedArgs = {
       races: [],
       genders: [],
@@ -42,7 +42,7 @@ class ArgsParser {
         if (this.isGender(arg))
           parsedArgs.genders.push(this.parseGender(arg));
         else if (this.isRace(arg))
-          parsedArgs.races.push(this.parseRace(arg));
+          parsedArgs.races = parsedArgs.races.concat(this.parseRaces(arg));
         else if (this.isCount(arg)) {
           if (parsedArgs.nameCount !== 1) // throw in order to just end the loop
             throw new Error('Already specified name count - can only take one name count!');
@@ -63,7 +63,7 @@ class ArgsParser {
         parsedArgs.message += `Race not specified or found; using default (${DEFAULT_RACE})${NEWLINE}`;
       }
     } catch (e) {
-      parsedArgs.error = e; // if there is an error, just get out of here
+      parsedArgs.error = e.message; // if there is an error, just get out of here
     }
     return parsedArgs;
   }
@@ -95,23 +95,38 @@ class ArgsParser {
   }
 
   isRace(inArg) {
-    return raceKeys.includes(inArg);
+    return raceKeys.includes(inArg) || this.isHalfbreed(inArg);
   }
 
-  parseRace(inArg) {
-    if (dwarfKeys.includes(inArg))
-      return 'dwarf';
-    else if (elfKeys.includes(inArg))
-      return 'elf';
-    else if (hobbitsesKeys.includes(inArg))
-      return 'halfling';
-    else if (orcKeys.includes(inArg))
-      return 'orc';
-    else if (gnomeKeys.includes(inArg))
-      return 'gnome';
+  isHalfbreed(inArg) {
+    return typeof inArg === 'string' && inArg.startsWith('half') && inArg !== 'halfling';
+  }
 
-    return 'human'; // default to human; should this be random?
+  parseRaces(inArg) {
+    if (this.isHalfbreed(inArg))
+      return this.parseHalfbreedRace(inArg);
+
+    if (dwarfKeys.includes(inArg))
+      return ['dwarf'];
+    else if (elfKeys.includes(inArg))
+      return ['elf'];
+    else if (hobbitsesKeys.includes(inArg))
+      return ['halfling'];
+    else if (orcKeys.includes(inArg))
+      return ['orc'];
+    else if (gnomeKeys.includes(inArg))
+      return ['gnome'];
+
+    return ['human']; // default to human; should this be random?
+  }
+
+  parseHalfbreedRace(inArg) {
+    let race = inArg.substring('half'.length, inArg.length);
+    if (race.startsWith('-'))
+      race = race.substring(1, race.length);
+
+    return ['human'].concat(this.parseRaces(race));
   }
 }
 
-module.exports = ArgsParser;
+module.exports = NameGeneratorArgsParser;

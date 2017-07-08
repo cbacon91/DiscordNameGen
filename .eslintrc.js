@@ -18,6 +18,9 @@ module.exports = {
         "no-unused-vars": ["error", {
             "args":"none"
         }],
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "no-use-before-define": ["error", { 
+            "functions": false 
+        }]
     }
 };

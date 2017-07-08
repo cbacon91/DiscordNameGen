@@ -1,8 +1,12 @@
 /* eslint-disable */
 //todo reenable eslint when implemented
 class ApiSeedRepository {
+  constructor() {
+    throw new Error('not implemented');
+  }
+
   getSeedData(args) {
-    throw 'not implemented';
+    throw new Error('not implemented');
   }
 }
 

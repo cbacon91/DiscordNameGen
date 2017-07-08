@@ -1,7 +1,8 @@
 const extensionsInit = require('./extensions');
 const Discord = require('discord.js');
 const config = require('./config');
-const fs = require('fs');
+
+const commands = require('./commands');
 
 (function init() {
   const juan = new Discord.Client();
@@ -10,34 +11,33 @@ const fs = require('fs');
 
   juan.login(token);
 
-  juan.commands = new Map();
-  juan.once('ready', () => {
-    const dir = './commands/';
+  juan.once('ready', onReady);
+  juan.on('message', onMessage);
+  juan.on('disconnect', onDisconnect);
 
-    fs.readdir(dir, (err, inFiles) => {
-      if (err) {
-        console.log(err);
-        process.exit();
-      } else {
-        const searchFiles = inFiles.filter(file => file.endsWith('Command.js'));
-        for (let i = 0; i < searchFiles.length; i++) {
-          const fileName = searchFiles[i];
-          try {
-            const Command = require(`./commands/${/(.*)\.js/.exec(fileName)[1]}`); // eslint-disable-line global-require,import/no-dynamic-require
-            const command = new Command(juan);
-            juan.commands.set(command.name, command);
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      }
-    });
-  });
+  function onDisconnect() {
+    process.exit();
+  }
 
-  juan.on('message', async (msg) => {
-    if (msg.author.bot) { // Don't respond to bots
-      return;
+  function onReady() {
+    juan.commands = new Map();
+    juan.commands.set('help', new commands.HelpCommand(juan));
+    juan.commands.set('name', new commands.NameGenerationCommand(juan,
+      new commands.argsParsers.NameGeneratorArgsParser(),
+      new commands.namegenerator.generators.NameGeneratorRepository(
+        getInnerNameGeneratorRepository(config))));
+
+    console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
+  }
+
+  async function onMessage(msg) {
+    if (msg.content === config.discord.authToken) {
+      console.log(`Emergency shut-off requested by ${msg.author.username}#${msg.author.discriminator} id ${msg.author.id}`);
+      process.exit();
     }
+
+    if (msg.author.bot)
+      return;
 
     let offset;
     const prefix = msg.guild
@@ -48,7 +48,7 @@ const fs = require('fs');
       offset = prefix.length;
     else if (msg.content.trim().startsWith(juan.user.toString()))
       offset = juan.user.toString().length + 1;
-    else
+    else // if message doesn't start with the prefix or an @mention, just ignore their message.
       return;
 
     const userInput = msg.content.substring(offset).split(' ')[0].toLowerCase();
@@ -59,9 +59,39 @@ const fs = require('fs');
 
     const args = msg.content.substring(offset + userInput.length).trim();
     command.run(msg, args);
-  });
+  }
 
-  juan.on('disconnect', () => {
-    process.exit();
-  });
+  // todo move to another file; index.js shouldn't do all of this
+  function getInnerNameGeneratorRepository(configuration) {
+    const generators = commands.namegenerator.generators;
+    const innerGenerators = {
+      randomSelector: () => new generators.RandomSelectorGenerator(
+        getSeedRepository(configuration)),
+      markovChain: () => new generators.MarkovChainGenerator(
+        getSeedRepository(configuration)),
+      api: () => new generators.ApiGenerator(),
+    };
+
+    const innerRepositoryCtor = innerGenerators[configuration.generator.type];
+    if (!innerRepositoryCtor)
+      throw new Error(`generation type ${configuration.generator.type} not implemented`);
+
+    return innerRepositoryCtor();
+  }
+
+  function getSeedRepository(configuration) {
+    const seeds = commands.namegenerator.generators.seeds;
+
+    const repositories = {
+      json: () => new seeds.JsonSeedRepository(),
+      mongo: () => new seeds.MongoSeedRepository(),
+      api: () => new seeds.ApiSeedRepository(),
+    };
+
+    const innerRepositoryCtor = repositories[configuration.generator.seedSource];
+    if (!innerRepositoryCtor)
+      throw new Error(`seed source ${configuration.generator.seedSource} not implemented`);
+
+    return innerRepositoryCtor();
+  }
 }());
