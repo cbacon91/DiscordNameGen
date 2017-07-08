@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": ".\\node_modules\\.bin\\eslint .\\ --fix",
-    "test": ".\\node_modules\\.bin\\mocha .\\tests --harmony",
+    "lint": "eslint .\\ --fix",
+    "test": "mocha tests --harmony",
     "build": "npm install & npm run lint & npm test",
     "start": "npm run build & node --harmony ."
   },
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/cbacon91/DiscordNameGen.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cbacon91/DiscordNameGen/issues"
   },
