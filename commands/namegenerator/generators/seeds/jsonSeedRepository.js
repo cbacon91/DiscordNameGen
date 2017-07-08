@@ -53,10 +53,10 @@ class JsonSeedRepository {
 
     const fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`;
     return fs.readFileAsync(fileName, 'utf8').then((seeds) => {
-      seedData.seeds = seeds;
+      seedData.seeds = JSON.parse(seeds);
       return seedData;
     }).catch((err) => {
-      console.log(`Error while generating seed data for JsonSeedRepository. ${NEWLINE}Filename: ${fileName} ${NEWLINE}Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`)
+      console.log(`Error while generating seed data for JsonSeedRepository. ${NEWLINE}Filename: ${fileName} ${NEWLINE}Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);
       console.log(err);
       seedData.error = 'An error occurred while generating seed data for name generation. This has been logged and will be fixed soon:tm:.';
       return seedData;

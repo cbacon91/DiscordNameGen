@@ -16,6 +16,13 @@ const mockSeedDataRepository =
           message: inArgs.provideMessage ? 'message' : '',
         };
       }
+      getSeedDataAsync(inArgs) {
+        return Promise.resolve({
+          seeds: ['juan'],
+          error: inArgs.provideError ? 'error' : '',
+          message: inArgs.provideMessage ? 'message' : '',
+        });
+      }
     };
 
 const generators = requireInject('../commands/namegenerator/generators', {
@@ -41,7 +48,7 @@ describe('api generator', () => {
 describe('markov chain generator', () => {
   it('should throw error because not implemented', () => {
     assert.throws(() => {
-      new generators.MarkovChainGenerator(mockSeedDataRepository);
+      new generators.MarkovChainGenerator();
     });
   });
 });
@@ -57,6 +64,7 @@ describe('name generator repository - container', () => {
     assert.throws(() => {
       const mockInnerGen = {
         generateName: args => 'juan',
+        generateNameAsync: args => Promise.resolve('juan')
       };
 
       const repo = new generators.NameGeneratorRepository(mockInnerGen);
@@ -67,6 +75,7 @@ describe('name generator repository - container', () => {
   it("should return innergenerator's name", () => {
     const mockInnerGen = {
       generateName: args => 'juan',
+        generateNameAsync: args => Promise.resolve('juan')
     };
 
     const repo = new generators.NameGeneratorRepository(mockInnerGen);
@@ -100,6 +109,33 @@ describe('random selector generator', () => {
   it('should add message if there is message from seedData', () => {
     const generator = new generators.RandomSelectorGenerator();
     const generated = generator.generateName({
+      provideMessage: true,
+      nameCount: 1,
+    });
+
+    assert.deepEqual(generated, {
+      names: ['juan'],
+      error: '',
+      message: 'message',
+    });
+  });
+
+  it('should return early with error message if there is error from seedData - generateNameAsync', async () => {
+    const generator = new generators.RandomSelectorGenerator();
+    const generated = await generator.generateNameAsync({
+      provideError: true,
+    });
+
+    assert.deepEqual(generated, {
+      names: [],
+      error: 'error',
+      message: '',
+    });
+  });
+
+  it('should add message if there is message from seedData - generateNameAsync', async () => {
+    const generator = new generators.RandomSelectorGenerator();
+    const generated = await generator.generateNameAsync({
       provideMessage: true,
       nameCount: 1,
     });

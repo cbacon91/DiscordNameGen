@@ -11,7 +11,7 @@ const seeds = requireInject('../commands/namegenerator/generators/seeds', {
   },
   fs: {
     readFileSync: (path, options) => '["juan", "charles"]',
-    readFile: (path, options, cb) => cb('["juan", "charles"]'),
+    readFileAsync: (path, options) => Promise.resolve('["juan", "charles"]'),
   },
 });
 

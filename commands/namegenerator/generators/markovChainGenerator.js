@@ -3,8 +3,8 @@
 const seeds = require('./seeds');
 
 class MarkovChainGenerator extends seeds.SeedDataRepository {
-  constructor(seedRepository) {
-    super(seedRepository);
+  constructor() {
+    super();
     throw new Error('not implemented');
   }
 
