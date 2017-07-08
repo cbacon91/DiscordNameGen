@@ -8,6 +8,10 @@ class ApiSeedRepository {
   getSeedData(args) {
     throw new Error('not implemented');
   }
+  
+  getSeedDataAsync(args) {
+    throw new Error('not implemented');
+  }
 }
 
 module.exports = ApiSeedRepository;

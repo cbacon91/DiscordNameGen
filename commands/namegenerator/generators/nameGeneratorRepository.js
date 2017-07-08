@@ -6,11 +6,19 @@ class NameGeneratorRepository {
     this.innerGenerator = innerGenerator;
   }
 
-  generateName(args) {
+  validateArgs(args) {
     if (!args)
       throw new Error('args must be supplied to generate a new name');
+  }
 
+  generateName(args) {
+    this.validateArgs(args);
     return this.innerGenerator.generateName(args);
+  }
+
+  generateNameAsync(args) {
+    this.validateArgs(args);
+    return this.innerGenerator.generateNameAsync(args);
   }
 }
 

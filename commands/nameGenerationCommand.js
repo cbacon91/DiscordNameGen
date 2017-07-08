@@ -24,7 +24,7 @@ class NameGenerationCommand extends CommandBase {
     if (parsedArgs.error)
       return this.send(`**${parsedArgs.error}**`, message);
 
-    const generated = this.nameGeneratorRepository.generateName(parsedArgs);
+    const generated = await this.nameGeneratorRepository.generateNameAsync(parsedArgs);
 
     if (generated.error)
       return this.send(`**${generated.error}**`, message);

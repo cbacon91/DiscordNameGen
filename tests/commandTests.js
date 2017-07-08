@@ -117,6 +117,11 @@ describe('name generation command', () => {
       generateName: args => ({
         error: 'error',
       }),
+      generateNameAsync: args => (
+        Promise.resolve({
+          error: 'error',
+        })
+      ),
     };
     const argsParserMock = {
       parseArgs: args => ({
@@ -145,6 +150,12 @@ describe('name generation command', () => {
         message: '',
         names: [],
       }),
+      generateNameAsync: args => (
+        Promise.resolve({
+          message: '',
+          names: [],
+        })
+      ),
     };
     const argsParserMock = {
       parseArgs: args => ({
@@ -174,6 +185,12 @@ describe('name generation command', () => {
         message: 'message/r/n',
         names: [],
       }),
+      generateNameAsync: args => (
+        Promise.resolve({
+          message: 'message/r/n',
+          names: [],
+        })
+      ),
     };
     const argsParserMock = {
       parseArgs: args => ({
@@ -203,6 +220,12 @@ describe('name generation command', () => {
         message: '',
         names: ['juan', 'charles', 'mikhail'],
       }),
+      generateNameAsync: args => (
+        Promise.resolve({
+          message: '',
+          names: ['juan', 'charles', 'mikhail'],
+        })
+      ),
     };
     const argsParserMock = {
       parseArgs: args => ({
@@ -240,6 +263,16 @@ describe('name generation command', () => {
           name2000CharactersLong,
         ],
       }),
+      generateNameAsync: args => (
+        Promise.resolve({
+          message: '',
+          names: [
+            'juan',
+            'charles',
+            name2000CharactersLong,
+          ],
+        })
+      ),
     };
 
     const argsParserMock = {

@@ -9,6 +9,10 @@ class SeedDataRepository {
   getSeedData(args) {
     return this.innerRepository.getSeedData(args);
   }
+
+  getSeedDataAsync(args) {
+    return this.innerRepository.getSeedDataAsync(args);
+  }
 }
 
 module.exports = SeedDataRepository;

@@ -2,11 +2,13 @@ const NEWLINE = require('os').EOL;
 const fs = require('fs');
 
 class JsonSeedRepository {
-  getSeedData(args) {
+  validateArgs(args) {
     const seedData = {
       seeds: [],
       message: '',
       error: '',
+      selectedRace: '',
+      selectedGender: '',
     };
 
     try {
@@ -27,13 +29,28 @@ class JsonSeedRepository {
         seedData.message += `Multiple races specified: generating ${race} names.${NEWLINE}`;
       if (uniqueGenders.length > 1)
         seedData.message += `Multiple genders specified: generating ${gender} names.${NEWLINE}`;
-
-      // todo async?
-      seedData.seeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${race}${gender}.json`, 'utf8'));
     } catch (e) {
       seedData.error = e.message;
     }
 
+    return seedData;
+  }
+
+  getSeedData(args) {
+    const seedData = this.validateArgs(args);
+    if (seedData.error)
+      return seedData;
+
+    seedData.seeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`, 'utf8'));
+    return seedData;
+  }
+
+  async getSeedDataAsync(args) {
+    const seedData = this.validateArgs(args);
+    if (seedData.error)
+      return seedData;
+
+    seedData.seeds = JSON.parse(await fs.readFile(`${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`, 'utf8'));
     return seedData;
   }
 }

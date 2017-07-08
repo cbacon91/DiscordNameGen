@@ -10,6 +10,10 @@ class ApiGenerator {
   generateName(args) {
     throw new Error('not implemented');
   }
+
+  generateNameAsync(args) {
+    throw new Error('not implemented');
+  }
 }
 
 module.exports = ApiGenerator;
