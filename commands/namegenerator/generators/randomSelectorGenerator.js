@@ -24,10 +24,16 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
     if (seedData.message)
       generated.message += seedData.message;
 
-
     for (let i = 0; i < args.nameCount; i++) {
-      const selected = Math.randomInt(0, seedData.seeds.length);
-      generated.names.push(seedData.seeds[selected]);
+      let selected = Math.randomInt(0, seedData.seeds.length);
+      let name = seedData.seeds[selected];
+
+      if (args.includeSurname) {
+        selected = Math.randomInt(0, seedData.surnameSeeds.length);
+        name += ` ${seedData.surnameSeeds[selected]}`;
+      }
+
+      generated.names.push(name);
     }
 
     return generated;
@@ -52,8 +58,15 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
       generated.message += seedData.message;
 
     for (let i = 0; i < args.nameCount; i++) {
-      const selected = Math.randomInt(0, seedData.seeds.length);
-      generated.names.push(seedData.seeds[selected]);
+      let selected = Math.randomInt(0, seedData.seeds.length);
+      let name = seedData.seeds[selected];
+
+      if (args.includeSurname) {
+        selected = Math.randomInt(0, seedData.surnameSeeds.length);
+        name += ` ${seedData.surnameSeeds[selected]}`;
+      }
+
+      generated.names.push(name);
     }
 
     return generated;

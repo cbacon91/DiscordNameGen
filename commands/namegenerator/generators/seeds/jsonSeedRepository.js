@@ -6,6 +6,7 @@ class JsonSeedRepository {
   validateArgs(args) {
     const seedData = {
       seeds: [],
+      surnameSeeds: [],
       message: '',
       error: '',
       selectedRace: '',
@@ -43,6 +44,10 @@ class JsonSeedRepository {
       return seedData;
 
     seedData.seeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`, 'utf8'));
+
+    if (args.includeSurname)
+      seedData.surnameSeeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace}.surname.json`, 'utf8'));
+
     return seedData;
   }
 
@@ -52,8 +57,20 @@ class JsonSeedRepository {
       return seedData;
 
     const fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`;
-    return fs.readFileAsync(fileName, 'utf8').then((seeds) => {
-      seedData.seeds = JSON.parse(seeds);
+    const surnameFile = `${__dirname}/jsonSeedData/${seedData.selectedRace}.surname.json`;
+
+    const filereads = [];
+    filereads.push(fs.readFileAsync(fileName, 'utf8'));
+
+    if (args.includeSurname)
+      filereads.push(fs.readFileAsync(surnameFile, 'utf8'));
+
+    return Promise.all(filereads).then((results) => {
+      seedData.seeds = JSON.parse(results[0]);
+
+      if (args.includeSurname)
+        seedData.surnameSeeds = JSON.parse(results[1]);
+
       return seedData;
     }).catch((err) => {
       console.log(`Error while generating seed data for JsonSeedRepository. ${NEWLINE}Filename: ${fileName} ${NEWLINE}Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);

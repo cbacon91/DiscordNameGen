@@ -32,6 +32,7 @@ class NameGeneratorArgsParser {
     const parsedArgs = {
       races: [],
       genders: [],
+      includeSurname: true, // TODO
       nameCount: 1,
       error: '',
       message: '',

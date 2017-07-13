@@ -125,6 +125,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: ['dwarf'],
       genders: ['female'],
+      includeSurname: true,
       nameCount: 20,
       error: '',
       message: '',
@@ -139,6 +140,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: ['dwarf', 'elf'],
       genders: ['female'],
+      includeSurname: true,
       nameCount: 20,
       error: '',
       message: '',
@@ -153,6 +155,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: ['dwarf'],
       genders: ['female', 'male'],
+      includeSurname: true,
       nameCount: 20,
       error: '',
       message: '',
@@ -167,6 +170,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: ['human'],
       genders: ['female'],
+      includeSurname: true,
       nameCount: 20,
       error: '',
       message: 'Race not specified or found; using default (human)\r\n',
@@ -181,6 +185,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: ['dwarf'],
       genders: ['male'],
+      includeSurname: true,
       nameCount: 20,
       error: '',
       message: 'Gender not specified or found; using default (male)\r\n',
@@ -195,6 +200,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: ['human'],
       genders: ['male'],
+      includeSurname: true,
       nameCount: 20,
       error: '',
       message: 'Gender not specified or found; using default (male)\r\nRace not specified or found; using default (human)\r\n',
@@ -209,6 +215,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: ['human'],
       genders: ['male'],
+      includeSurname: true,
       nameCount: 1,
       error: '',
       message: 'Gender not specified or found; using default (male)\r\nRace not specified or found; using default (human)\r\n',
@@ -223,6 +230,7 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: [],
       genders: [],
+      includeSurname: true,
       nameCount: 20,
       error: 'Already specified name count - can only take one name count!',
       message: '',

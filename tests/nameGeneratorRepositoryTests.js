@@ -64,7 +64,7 @@ describe('name generator repository - container', () => {
     assert.throws(() => {
       const mockInnerGen = {
         generateName: args => 'juan',
-        generateNameAsync: args => Promise.resolve('juan')
+        generateNameAsync: args => Promise.resolve('juan'),
       };
 
       const repo = new generators.NameGeneratorRepository(mockInnerGen);
@@ -75,7 +75,7 @@ describe('name generator repository - container', () => {
   it("should return innergenerator's name", () => {
     const mockInnerGen = {
       generateName: args => 'juan',
-        generateNameAsync: args => Promise.resolve('juan')
+      generateNameAsync: args => Promise.resolve('juan'),
     };
 
     const repo = new generators.NameGeneratorRepository(mockInnerGen);
