@@ -20,9 +20,11 @@ class JsonSeedRepository {
         throw new Error('at least one race must be provided to generate see data');
       if (!args.genders || !args.genders.length)
         throw new Error('at least one gender must be provided to generate seed data');
-
-      const uniqueRaces = [...new Set(args.races)];
+      
       const uniqueGenders = [...new Set(args.genders)];
+      const uniqueRaces = [];
+      const isNewUniqueRace = (newRace) => !uniqueRaces.map(r => r.name).includes(newRace.name);
+      args.races.filter(isNewUniqueRace).forEach(r => uniqueRaces.push(r));
 
       seedData.selectedRace = uniqueRaces[Math.randomInt(0, uniqueRaces.length)];
       seedData.selectedGender = uniqueGenders[Math.randomInt(0, uniqueGenders.length)];
@@ -43,10 +45,10 @@ class JsonSeedRepository {
     if (seedData.error)
       return seedData;
 
-    seedData.seeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`, 'utf8'));
+    seedData.seeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace.name}.${seedData.selectedGender}.json`, 'utf8'));
 
     if (args.includeSurname)
-      seedData.surnameSeeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace}.surname.json`, 'utf8'));
+      seedData.surnameSeeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace.name}.surname.json`, 'utf8'));
 
     return seedData;
   }
@@ -56,8 +58,8 @@ class JsonSeedRepository {
     if (seedData.error)
       return seedData;
 
-    const fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace}.${seedData.selectedGender}.json`;
-    const surnameFile = `${__dirname}/jsonSeedData/${seedData.selectedRace}.surname.json`;
+    const fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace.name}.${seedData.selectedGender}.json`;
+    const surnameFile = `${__dirname}/jsonSeedData/${seedData.selectedRace.name}.surname.json`;
 
     const filereads = [];
     filereads.push(fs.readFileAsync(fileName, 'utf8'));

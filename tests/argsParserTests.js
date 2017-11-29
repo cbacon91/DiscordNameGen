@@ -59,25 +59,25 @@ describe('name generator args parsers', () => {
   });
 
   it('should parse race given correct input', () => {
-    assert.deepEqual(parser.parseRaces('d'), ['dwarf']);
-    assert.deepEqual(parser.parseRaces('dwarf'), ['dwarf']);
-    assert.deepEqual(parser.parseRaces('halfling'), ['halfling']);
-    assert.deepEqual(parser.parseRaces('hobbit'), ['halfling']);
+    assert.deepEqual(parser.parseRaces('d'), [{name:'dwarf', isClanBased:true}]);
+    assert.deepEqual(parser.parseRaces('dwarf'), [{name:'dwarf', isClanBased:true}]);
+    assert.deepEqual(parser.parseRaces('halfling'), [{name:'halfling', isClanBased:true}]);
+    assert.deepEqual(parser.parseRaces('hobbit'), [{name:'halfling', isClanBased:true}]);
   });
 
   it('should parse human and halfrace for half-elf and halfelf', () => {
-    assert.deepEqual(parser.parseRaces('half-elf'), ['human', 'elf']);
-    assert.deepEqual(parser.parseRaces('halfelf'), ['human', 'elf']);
-    assert.deepEqual(parser.parseRaces('half-dwarf'), ['human', 'dwarf']);
-    assert.deepEqual(parser.parseRaces('halfhalfling'), ['human', 'halfling']);
+    assert.deepEqual(parser.parseRaces('half-elf'), [{name:'human'}, {name:'elf'}]);
+    assert.deepEqual(parser.parseRaces('halfelf'), [{name:'human'}, {name:'elf'}]);
+    assert.deepEqual(parser.parseRaces('half-dwarf'), [{name:'human'}, {name:'dwarf', isClanBased:true}]);
+    assert.deepEqual(parser.parseRaces('halfhalfling'), [{name:'human'}, {name:'halfling', isClanBased:true}]);
   });
 
   // is this test invalid? do we want it to random given bad input?
   it('should default to human given bad race input', () => {
     // should parseRaces throw error if not given a string?
-    assert.deepEqual(parser.parseRaces('bruh'), ['human']);
-    assert.deepEqual(parser.parseRaces({}), ['human']);
-    assert.deepEqual(parser.parseRaces([]), ['human']);
+    assert.deepEqual(parser.parseRaces('bruh'), [{name:'human'}]);
+    assert.deepEqual(parser.parseRaces({}), [{name:'human'}]);
+    assert.deepEqual(parser.parseRaces([]), [{name:'human'}]);
   });
 
   it('should parse gender given correct input', () => {
@@ -123,7 +123,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: ['dwarf'],
+      races: [{name:'dwarf', isClanBased:true}],
       genders: ['female'],
       includeSurname: true,
       nameCount: 20,
@@ -138,7 +138,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: ['dwarf', 'elf'],
+      races: [{name:'dwarf', isClanBased:true}, {name:'elf'}],
       genders: ['female'],
       includeSurname: true,
       nameCount: 20,
@@ -153,7 +153,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: ['dwarf'],
+      races: [{name:'dwarf', isClanBased:true}],
       genders: ['female', 'male'],
       includeSurname: true,
       nameCount: 20,
@@ -168,7 +168,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: ['human'],
+      races: [{name:'human'}],
       genders: ['female'],
       includeSurname: true,
       nameCount: 20,
@@ -183,7 +183,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: ['dwarf'],
+      races: [{name:'dwarf', isClanBased:true}],
       genders: ['male'],
       includeSurname: true,
       nameCount: 20,
@@ -198,7 +198,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: ['human'],
+      races: [{name:'human'}],
       genders: ['male'],
       includeSurname: true,
       nameCount: 20,
@@ -213,7 +213,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: ['human'],
+      races: [{name:'human'}],
       genders: ['male'],
       includeSurname: true,
       nameCount: 1,

@@ -1,8 +1,7 @@
 const NEWLINE = require('os').EOL;
 
-const MAX_NAME_COUNT = 50;
-const DEFAULT_GENDER = 'male';
-const DEFAULT_RACE = 'human';
+const maxNameCount = 50;
+const defaultGender = 'male';
 
 const dwarfKeys = ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'];
 const elfKeys = ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'];
@@ -10,11 +9,23 @@ const hobbitsesKeys = ['h', 'halfling', 'hobbit', 'kender', 'half'];
 const orcKeys = ['o', 'orc', 'ork', 'orcish', 'orkish'];
 const gnomeKeys = ['g', 'gnome', 'gnomish'];
 const humanKeys = ['human', 'person', 's', 'n'];
-const raceKeys = dwarfKeys.concat(elfKeys, hobbitsesKeys, orcKeys, gnomeKeys, humanKeys);
+const dragonbornKeys = ['dragon', 'dragonborn', 'dragonborne', 'dragonfolk'];
+const tieflingKeys = ['t', 'tielfing', 'fiend', 'abyssal', 'demon', 'daemon', 'devil'];
+
+const raceKeys = dwarfKeys.concat(elfKeys, hobbitsesKeys, orcKeys, gnomeKeys, humanKeys, dragonbornKeys, tieflingKeys);
 
 const maleKeys = ['m', 'male', 'man', 'boy'];
 const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
+
+const dwarven = { name: 'dwarf', isClanBased: true};
+const gnomish = { name: 'gnome', isClanBased: true};
+const halfling = { name: 'halfling', isClanBased: true};
+const elven = { name: 'elf' };
+const human = { name: 'human' };
+const tiefling = { name: 'tiefling' };
+const orcish = { name: 'orc' };
+const dragonborn = { name: 'dragonborn' };
 
 class NameGeneratorArgsParser {
   // todo with the parsing..
@@ -28,7 +39,7 @@ class NameGeneratorArgsParser {
   //    randomization (even if it's something like 85% human 75% male or something .. tbd)
 
   parseArgs(inArgs) {
-    const args = inArgs.trim().split(' ').filter(arg => arg);
+    const args = inArgs.trim().split(' ').filter(arg => !!arg);
     const parsedArgs = {
       races: [],
       genders: [],
@@ -55,13 +66,13 @@ class NameGeneratorArgsParser {
 
       if (!parsedArgs.genders.length) {
         // default male; should this be random or should we supply both and let consumer decide?
-        parsedArgs.genders.push(DEFAULT_GENDER);
-        parsedArgs.message += `Gender not specified or found; using default (${DEFAULT_GENDER})${NEWLINE}`;
+        parsedArgs.genders.push(defaultGender);
+        parsedArgs.message += `Gender not specified or found; using default (${defaultGender})${NEWLINE}`;
       }
       if (!parsedArgs.races.length) {
         // default human; should this be random or should we supply all and let consumer decide?
-        parsedArgs.races.push(DEFAULT_RACE);
-        parsedArgs.message += `Race not specified or found; using default (${DEFAULT_RACE})${NEWLINE}`;
+        parsedArgs.races.push(human);
+        parsedArgs.message += `Race not specified or found; using default (${human.name})${NEWLINE}`;
       }
     } catch (e) {
       parsedArgs.error = e.message; // if there is an error, just get out of here
@@ -77,9 +88,9 @@ class NameGeneratorArgsParser {
   parseCount(inArg, parsedArgs) {
     let count = Math.floor(Number(inArg));
 
-    if (count > MAX_NAME_COUNT) {
-      parsedArgs.message += `Exceeded max name count; using max (${MAX_NAME_COUNT})${NEWLINE}`;
-      count = MAX_NAME_COUNT;
+    if (count > maxNameCount) {
+      parsedArgs.message += `Exceeded max name count; using max (${maxNameCount})${NEWLINE}`;
+      count = maxNameCount;
     }
 
     return count;
@@ -108,17 +119,17 @@ class NameGeneratorArgsParser {
       return this.parseHalfbreedRace(inArg);
 
     if (dwarfKeys.includes(inArg))
-      return ['dwarf'];
+      return [dwarven];
     else if (elfKeys.includes(inArg))
-      return ['elf'];
+      return [elven];
     else if (hobbitsesKeys.includes(inArg))
-      return ['halfling'];
+      return [halfling];
     else if (orcKeys.includes(inArg))
-      return ['orc'];
+      return [orcRace];
     else if (gnomeKeys.includes(inArg))
-      return ['gnome'];
+      return [gnomish];
 
-    return ['human']; // default to human; should this be random?
+    return [{name:'human'}]; // default to human; should this be random?
   }
 
   parseHalfbreedRace(inArg) {
@@ -126,7 +137,7 @@ class NameGeneratorArgsParser {
     if (race.startsWith('-'))
       race = race.substring(1, race.length);
 
-    return ['human'].concat(this.parseRaces(race));
+    return [human].concat(this.parseRaces(race));
   }
 }
 
