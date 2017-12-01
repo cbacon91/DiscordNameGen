@@ -19,7 +19,14 @@ class HelpCommand extends CommandBase {
     if (message.guild)
       prefix = config.discord.defaultPrefix;
 
-    let helpText = `\`\`\`asciidoc${this.NEWLINE}`;
+    let helpText = `For more detailed comments on commands, visit the full readme at ${pkge.homepage}${this.NEWLINE}`;
+    
+    helpText += '```asciidoc' + this.NEWLINE;
+
+    // todo..
+    // helpText += 'You can also specify `help {commandName}` for full details on the command. ';
+    // helpText += 'These are fully-fleshed out, and are walls of text. Use them at your discretion.';
+
     this.client.commands.forEach((command) => {
       helpText += prefix + command.name;
 
@@ -36,7 +43,8 @@ class HelpCommand extends CommandBase {
     helpText += '===============================';
     helpText += this.NEWLINE + this.NEWLINE;
     helpText += `Version ${pkge.version} \`\`\``;
-    helpText += `Bugs? Questions? Feel free to contact my creator directly at ${config.discord.devServer}`;
+    helpText += 'Bugs? Questions? Feel free to contact my creator directly at ';
+    helpText += config.discord.devServer ? config.discord.devServer : 'the github link above';
 
     return this.send(helpText, message);
   }
