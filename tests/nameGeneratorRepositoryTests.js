@@ -11,14 +11,18 @@ const mockSeedDataRepository =
       constructor(innerRepo) {}
       getSeedData(inArgs) {
         return {
+          selectedRace: { lacksSurname: true, isGenderless: true },
           seeds: ['juan'],
+          surnameSeeds: [],
           error: inArgs.provideError ? 'error' : '',
           message: inArgs.provideMessage ? 'message' : '',
         };
       }
       getSeedDataAsync(inArgs) {
         return Promise.resolve({
+          selectedRace: { lacksSurname: true, isGenderless: true },
           seeds: ['juan'],
+          surnameSeeds: [],
           error: inArgs.provideError ? 'error' : '',
           message: inArgs.provideMessage ? 'message' : '',
         });

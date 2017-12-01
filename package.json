@@ -1,14 +1,15 @@
 {
   "name": "discordnamegen",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .\\ --fix",
     "test": "mocha tests --harmony",
     "build": "npm install & npm run lint & npm test",
-    "start": "npm run build & node --harmony ."
-  },
+    "dev": "npm run build & node --inspect=127.0.0.1:9229 --harmony .",
+    "start": "npm install & node . --harmony"
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cbacon91/DiscordNameGen.git"

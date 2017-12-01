@@ -8,7 +8,7 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
 
   generateName(args) {
     this.validateArgs(args);
-
+    console.log(args);
     const generated = {
       names: [],
       error: '',
@@ -28,7 +28,7 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
       let selected = Math.randomInt(0, seedData.seeds.length);
       let name = seedData.seeds[selected];
 
-      if (args.includeSurname) {
+      if (!seedData.selectedRace.lacksSurname) {
         selected = Math.randomInt(0, seedData.surnameSeeds.length);
         name += ` ${seedData.surnameSeeds[selected]}`;
       }
@@ -61,7 +61,7 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
       let selected = Math.randomInt(0, seedData.seeds.length);
       let name = seedData.seeds[selected];
 
-      if (args.includeSurname) {
+      if (!seedData.selectedRace.lacksSurname) {
         selected = Math.randomInt(0, seedData.surnameSeeds.length);
         name += `${seedData.selectedRace.isClanBased ? ' of clan' : ''} ${seedData.surnameSeeds[selected]}`;
       }

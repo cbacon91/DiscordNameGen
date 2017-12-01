@@ -59,25 +59,25 @@ describe('name generator args parsers', () => {
   });
 
   it('should parse race given correct input', () => {
-    assert.deepEqual(parser.parseRaces('d'), [{name:'dwarf', isClanBased:true}]);
-    assert.deepEqual(parser.parseRaces('dwarf'), [{name:'dwarf', isClanBased:true}]);
-    assert.deepEqual(parser.parseRaces('halfling'), [{name:'halfling', isClanBased:true}]);
-    assert.deepEqual(parser.parseRaces('hobbit'), [{name:'halfling', isClanBased:true}]);
+    assert.deepEqual(parser.parseRaces('d'), [{ name: 'dwarf', isClanBased: true }]);
+    assert.deepEqual(parser.parseRaces('dwarf'), [{ name: 'dwarf', isClanBased: true }]);
+    assert.deepEqual(parser.parseRaces('halfling'), [{ name: 'halfling', isClanBased: true }]);
+    assert.deepEqual(parser.parseRaces('hobbit'), [{ name: 'halfling', isClanBased: true }]);
   });
 
   it('should parse human and halfrace for half-elf and halfelf', () => {
-    assert.deepEqual(parser.parseRaces('half-elf'), [{name:'human'}, {name:'elf'}]);
-    assert.deepEqual(parser.parseRaces('halfelf'), [{name:'human'}, {name:'elf'}]);
-    assert.deepEqual(parser.parseRaces('half-dwarf'), [{name:'human'}, {name:'dwarf', isClanBased:true}]);
-    assert.deepEqual(parser.parseRaces('halfhalfling'), [{name:'human'}, {name:'halfling', isClanBased:true}]);
+    assert.deepEqual(parser.parseRaces('half-elf'), [{ name: 'human' }, { name: 'elf' }]);
+    assert.deepEqual(parser.parseRaces('halfelf'), [{ name: 'human' }, { name: 'elf' }]);
+    assert.deepEqual(parser.parseRaces('half-dwarf'), [{ name: 'human' }, { name: 'dwarf', isClanBased: true }]);
+    assert.deepEqual(parser.parseRaces('halfhalfling'), [{ name: 'human' }, { name: 'halfling', isClanBased: true }]);
   });
 
   // is this test invalid? do we want it to random given bad input?
   it('should default to human given bad race input', () => {
     // should parseRaces throw error if not given a string?
-    assert.deepEqual(parser.parseRaces('bruh'), [{name:'human'}]);
-    assert.deepEqual(parser.parseRaces({}), [{name:'human'}]);
-    assert.deepEqual(parser.parseRaces([]), [{name:'human'}]);
+    assert.deepEqual(parser.parseRaces('bruh'), [{ name: 'human' }]);
+    assert.deepEqual(parser.parseRaces({}), [{ name: 'human' }]);
+    assert.deepEqual(parser.parseRaces([]), [{ name: 'human' }]);
   });
 
   it('should parse gender given correct input', () => {
@@ -97,7 +97,7 @@ describe('name generator args parsers', () => {
 
   it('should parse count given valid input', () => {
     assert.strictEqual(parser.parseCount('10', {}), 10);
-    assert.strictEqual(parser.parseCount('25', {}), 25);
+    assert.strictEqual(parser.parseCount('15', {}), 15);
   });
 
   it('should reset count if max value exceeded', () => {
@@ -105,7 +105,7 @@ describe('name generator args parsers', () => {
       message: '',
     };
 
-    assert.strictEqual(parser.parseCount('100', parsedArgs), 50);
+    assert.strictEqual(parser.parseCount('100', parsedArgs), 20);
   });
 
   it('should return message if max value exceeded', () => {
@@ -123,9 +123,8 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{name:'dwarf', isClanBased:true}],
+      races: [{ name: 'dwarf', isClanBased: true }],
       genders: ['female'],
-      includeSurname: true,
       nameCount: 20,
       error: '',
       message: '',
@@ -138,9 +137,8 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{name:'dwarf', isClanBased:true}, {name:'elf'}],
+      races: [{ name: 'dwarf', isClanBased: true }, { name: 'elf' }],
       genders: ['female'],
-      includeSurname: true,
       nameCount: 20,
       error: '',
       message: '',
@@ -153,9 +151,8 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{name:'dwarf', isClanBased:true}],
+      races: [{ name: 'dwarf', isClanBased: true }],
       genders: ['female', 'male'],
-      includeSurname: true,
       nameCount: 20,
       error: '',
       message: '',
@@ -168,9 +165,8 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{name:'human'}],
+      races: [{ name: 'human' }],
       genders: ['female'],
-      includeSurname: true,
       nameCount: 20,
       error: '',
       message: 'Race not specified or found; using default (human)\r\n',
@@ -183,9 +179,8 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{name:'dwarf', isClanBased:true}],
+      races: [{ name: 'dwarf', isClanBased: true }],
       genders: ['male'],
-      includeSurname: true,
       nameCount: 20,
       error: '',
       message: 'Gender not specified or found; using default (male)\r\n',
@@ -198,9 +193,8 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{name:'human'}],
+      races: [{ name: 'human' }],
       genders: ['male'],
-      includeSurname: true,
       nameCount: 20,
       error: '',
       message: 'Gender not specified or found; using default (male)\r\nRace not specified or found; using default (human)\r\n',
@@ -213,9 +207,8 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{name:'human'}],
+      races: [{ name: 'human' }],
       genders: ['male'],
-      includeSurname: true,
       nameCount: 1,
       error: '',
       message: 'Gender not specified or found; using default (male)\r\nRace not specified or found; using default (human)\r\n',
@@ -230,7 +223,6 @@ describe('name generator args parsers', () => {
     assert.deepEqual(parsed, {
       races: [],
       genders: [],
-      includeSurname: true,
       nameCount: 20,
       error: 'Already specified name count - can only take one name count!',
       message: '',

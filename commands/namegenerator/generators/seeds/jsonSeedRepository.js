@@ -9,7 +9,7 @@ class JsonSeedRepository {
       surnameSeeds: [],
       message: '',
       error: '',
-      selectedRace: '',
+      selectedRace: {},
       selectedGender: '',
     };
 
@@ -20,10 +20,10 @@ class JsonSeedRepository {
         throw new Error('at least one race must be provided to generate see data');
       if (!args.genders || !args.genders.length)
         throw new Error('at least one gender must be provided to generate seed data');
-      
+
       const uniqueGenders = [...new Set(args.genders)];
       const uniqueRaces = [];
-      const isNewUniqueRace = (newRace) => !uniqueRaces.map(r => r.name).includes(newRace.name);
+      const isNewUniqueRace = newRace => !uniqueRaces.map(r => r.name).includes(newRace.name);
       args.races.filter(isNewUniqueRace).forEach(r => uniqueRaces.push(r));
 
       seedData.selectedRace = uniqueRaces[Math.randomInt(0, uniqueRaces.length)];
@@ -58,19 +58,24 @@ class JsonSeedRepository {
     if (seedData.error)
       return seedData;
 
-    const fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace.name}.${seedData.selectedGender}.json`;
+    let fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace.name}`;
+    if (!seedData.selectedRace.isGenderless)
+      fileName += `.${seedData.selectedGender}`;
+    fileName += '.json';
+
     const surnameFile = `${__dirname}/jsonSeedData/${seedData.selectedRace.name}.surname.json`;
 
     const filereads = [];
+    const generateSurname = !seedData.selectedRace.lacksSurname;
     filereads.push(fs.readFileAsync(fileName, 'utf8'));
 
-    if (args.includeSurname)
+    if (generateSurname)
       filereads.push(fs.readFileAsync(surnameFile, 'utf8'));
 
     return Promise.all(filereads).then((results) => {
       seedData.seeds = JSON.parse(results[0]);
 
-      if (args.includeSurname)
+      if (generateSurname)
         seedData.surnameSeeds = JSON.parse(results[1]);
 
       return seedData;

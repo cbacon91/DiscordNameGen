@@ -1,6 +1,6 @@
 const NEWLINE = require('os').EOL;
 
-const maxNameCount = 50;
+const maxNameCount = 20;
 const defaultGender = 'male';
 
 const dwarfKeys = ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'];
@@ -11,21 +11,25 @@ const gnomeKeys = ['g', 'gnome', 'gnomish'];
 const humanKeys = ['human', 'person', 's', 'n'];
 const dragonbornKeys = ['dragon', 'dragonborn', 'dragonborne', 'dragonfolk'];
 const tieflingKeys = ['t', 'tielfing', 'fiend', 'abyssal', 'demon', 'daemon', 'devil'];
+const virtueKeys = ['virtue', 'sin'];
 
-const raceKeys = dwarfKeys.concat(elfKeys, hobbitsesKeys, orcKeys, gnomeKeys, humanKeys, dragonbornKeys, tieflingKeys);
+const raceKeys = dwarfKeys.concat(
+  elfKeys, hobbitsesKeys, orcKeys, gnomeKeys, humanKeys,
+  dragonbornKeys, tieflingKeys, virtueKeys);
 
 const maleKeys = ['m', 'male', 'man', 'boy'];
 const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
 
-const dwarven = { name: 'dwarf', isClanBased: true};
-const gnomish = { name: 'gnome', isClanBased: true};
-const halfling = { name: 'halfling', isClanBased: true};
+const dwarven = { name: 'dwarf', isClanBased: true };
+const gnomish = { name: 'gnome', isClanBased: true };
+const halfling = { name: 'halfling', isClanBased: true };
+const dragonborn = { name: 'dragonborn', isClanBased: true };
 const elven = { name: 'elf' };
 const human = { name: 'human' };
-const tiefling = { name: 'tiefling' };
 const orcish = { name: 'orc' };
-const dragonborn = { name: 'dragonborn' };
+const tiefling = { name: 'tiefling', lacksSurname: true };
+const virtue = { name: 'virtue', lacksSurname: true, isGenderless: true };
 
 class NameGeneratorArgsParser {
   // todo with the parsing..
@@ -43,7 +47,6 @@ class NameGeneratorArgsParser {
     const parsedArgs = {
       races: [],
       genders: [],
-      includeSurname: true, // TODO
       nameCount: 1,
       error: '',
       message: '',
@@ -125,11 +128,17 @@ class NameGeneratorArgsParser {
     else if (hobbitsesKeys.includes(inArg))
       return [halfling];
     else if (orcKeys.includes(inArg))
-      return [orcRace];
+      return [orcish];
     else if (gnomeKeys.includes(inArg))
       return [gnomish];
+    else if (tieflingKeys.includes(inArg))
+      return [tiefling];
+    else if (dragonbornKeys.includes(inArg))
+      return [dragonborn];
+    else if (virtueKeys.includes(inArg))
+      return [virtue];
 
-    return [{name:'human'}]; // default to human; should this be random?
+    return [human]; // default to human; should this be random?
   }
 
   parseHalfbreedRace(inArg) {
