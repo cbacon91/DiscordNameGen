@@ -4,19 +4,46 @@ const config = require('./config');
 
 const commands = require('./commands');
 
-(function init() {
+// wait five minutes and try again .. The most common crash is discord losing connection,
+// and trying again immediately would fail as well.
+const retryIn = 5 * 60 * 1000; // 
+
+const maxCrashes = 5;
+let crashes = 0; // if only it were that easy...
+
+runBot();
+
+function runBot() {
+  try {
+    console.log(`Initializing Juan Charles for attempt number ${crashes} ...`);
+    init();
+  } catch (error) {
+    crashes += 1;
+    console.log(`Encountered error # ${crashes}:`);
+    console.log(error);
+
+    if (crashes < maxCrashes) {
+      console.log(`Retrying in ${retryIn / 1000 / 60} minutes.`);
+      setTimeout(runBot, retryIn);
+    }
+    else
+      process.exit(500); // just let it die
+  }
+}
+
+function init() {
   const juan = new Discord.Client();
   const token = config.discord.authToken;
   extensionsInit();
 
   juan.login(token);
-
+  
   juan.once('ready', onReady);
   juan.on('message', onMessage);
   juan.on('disconnect', onDisconnect);
 
   function onDisconnect() {
-    process.exit();
+    process.exitCode = 0;
   }
 
   function onReady() {
@@ -30,10 +57,10 @@ const commands = require('./commands');
     console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
   }
 
-  async function onMessage(msg) {
+  function onMessage(msg) {
     if (msg.content === config.discord.authToken) {
       console.log(`Emergency shut-off requested by ${msg.author.username}#${msg.author.discriminator} id ${msg.author.id}`);
-      process.exit();
+      process.exit(503); // exit instead of set exitCode because this needs to be shut off immediately
     }
 
     if (msg.author.bot)
@@ -94,4 +121,4 @@ const commands = require('./commands');
 
     return innerRepositoryCtor();
   }
-}());
+}
