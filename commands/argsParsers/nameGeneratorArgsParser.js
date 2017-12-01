@@ -10,7 +10,7 @@ const orcKeys = ['o', 'orc', 'ork', 'orcish', 'orkish'];
 const gnomeKeys = ['g', 'gnome', 'gnomish'];
 const humanKeys = ['human', 'person', 's', 'n'];
 const dragonbornKeys = ['dragon', 'dragonborn', 'dragonborne', 'dragonfolk'];
-const tieflingKeys = ['t', 'tielfing', 'fiend', 'abyssal', 'demon', 'daemon', 'devil'];
+const tieflingKeys = ['t', 'tiefling', 'fiend', 'abyssal', 'demon', 'daemon', 'devil'];
 const virtueKeys = ['virtue', 'sin'];
 
 const raceKeys = dwarfKeys.concat(

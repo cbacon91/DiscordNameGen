@@ -30,7 +30,7 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
 
       if (!seedData.selectedRace.lacksSurname) {
         selected = Math.randomInt(0, seedData.surnameSeeds.length);
-        name += `${seedData.selectedRace.isClanBased ? ' of clan' : ''} ${seedData.surnameSeeds[selected]}`;
+        name += ` ${seedData.surnameSeeds[selected]}`;
       }
 
       generated.names.push(name);
