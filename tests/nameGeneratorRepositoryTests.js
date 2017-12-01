@@ -63,67 +63,10 @@ describe('name generator repository - container', () => {
       new generators.NameGeneratorRepository();
     });
   });
-
-  it('should throw error if args are not supplied to generate name', () => {
-    assert.throws(() => {
-      const mockInnerGen = {
-        generateName: args => 'juan',
-        generateNameAsync: args => Promise.resolve('juan'),
-      };
-
-      const repo = new generators.NameGeneratorRepository(mockInnerGen);
-      repo.generateName();
-    });
-  });
-
-  it("should return innergenerator's name", () => {
-    const mockInnerGen = {
-      generateName: args => 'juan',
-      generateNameAsync: args => Promise.resolve('juan'),
-    };
-
-    const repo = new generators.NameGeneratorRepository(mockInnerGen);
-    const name = repo.generateName({});
-    assert.strictEqual(name, 'juan');
-  });
 });
 
 
 describe('random selector generator', () => {
-  it('should throw error with no args', () => {
-    assert.throws(() => {
-      const generator = new generators.RandomSelectorGenerator();
-      generator.generateName();
-    });
-  });
-
-  it('should return early with error message if there is error from seedData', () => {
-    const generator = new generators.RandomSelectorGenerator();
-    const generated = generator.generateName({
-      provideError: true,
-    });
-
-    assert.deepEqual(generated, {
-      names: [],
-      error: 'error',
-      message: '',
-    });
-  });
-
-  it('should add message if there is message from seedData', () => {
-    const generator = new generators.RandomSelectorGenerator();
-    const generated = generator.generateName({
-      provideMessage: true,
-      nameCount: 1,
-    });
-
-    assert.deepEqual(generated, {
-      names: ['juan'],
-      error: '',
-      message: 'message',
-    });
-  });
-
   it('should return early with error message if there is error from seedData - generateNameAsync', async () => {
     const generator = new generators.RandomSelectorGenerator();
     const generated = await generator.generateNameAsync({

@@ -8,11 +8,6 @@ class MarkovChainGenerator extends seeds.SeedDataRepository {
     throw new Error('not implemented');
   }
 
-  generateName(args) {
-    const seedData = super.getSeedData(args);
-    throw 'not implemented';
-  }
-
   async generateNameAsync(args) {
     const seedData = await super.getSeedDataAsync(args);
     throw 'not implemented';    

@@ -6,10 +6,6 @@ class SeedDataRepository {
     this.innerRepository = innerRepository;
   }
 
-  getSeedData(args) {
-    return this.innerRepository.getSeedData(args);
-  }
-
   getSeedDataAsync(args) {
     return this.innerRepository.getSeedDataAsync(args);
   }

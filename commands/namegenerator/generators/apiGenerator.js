@@ -7,10 +7,6 @@ class ApiGenerator {
     throw new Error('not implemented');
   }
 
-  generateName(args) {
-    throw new Error('not implemented');
-  }
-
   generateNameAsync(args) {
     throw new Error('not implemented');
   }

@@ -40,19 +40,6 @@ class JsonSeedRepository {
     return seedData;
   }
 
-  getSeedData(args) {
-    const seedData = this.validateArgs(args);
-    if (seedData.error)
-      return seedData;
-
-    seedData.seeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace.name}.${seedData.selectedGender}.json`, 'utf8'));
-
-    if (args.includeSurname)
-      seedData.surnameSeeds = JSON.parse(fs.readFileSync(`${__dirname}/jsonSeedData/${seedData.selectedRace.name}.surname.json`, 'utf8'));
-
-    return seedData;
-  }
-
   async getSeedDataAsync(args) {
     const seedData = this.validateArgs(args);
     if (seedData.error)

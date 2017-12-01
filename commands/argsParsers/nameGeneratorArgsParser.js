@@ -27,7 +27,7 @@ const halfling = { name: 'halfling', isClanBased: true };
 const dragonborn = { name: 'dragonborn', isClanBased: true };
 const elven = { name: 'elf' };
 const human = { name: 'human' };
-const orcish = { name: 'orc' };
+const orcish = { name: 'orc', isClanBased: true };
 const tiefling = { name: 'tiefling', lacksSurname: true };
 const virtue = { name: 'virtue', lacksSurname: true, isGenderless: true };
 
