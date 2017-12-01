@@ -6,7 +6,7 @@ const commands = require('./commands');
 
 // wait five minutes and try again .. The most common crash is discord losing connection,
 // and trying again immediately would fail as well.
-const retryIn = 5 * 60 * 1000; // 
+const retryIn = 5 * 60 * 1000; //
 
 const maxCrashes = 5;
 let crashes = 0; // if only it were that easy...
@@ -25,8 +25,7 @@ function runBot() {
     if (crashes < maxCrashes) {
       console.log(`Retrying in ${retryIn / 1000 / 60} minutes.`);
       setTimeout(runBot, retryIn);
-    }
-    else
+    } else
       process.exit(500); // just let it die
   }
 }
@@ -37,7 +36,7 @@ function init() {
   extensionsInit();
 
   juan.login(token);
-  
+
   juan.once('ready', onReady);
   juan.on('message', onMessage);
   juan.on('disconnect', onDisconnect);
@@ -60,7 +59,8 @@ function init() {
   function onMessage(msg) {
     if (msg.content === config.discord.authToken) {
       console.log(`Emergency shut-off requested by ${msg.author.username}#${msg.author.discriminator} id ${msg.author.id}`);
-      process.exit(503); // exit instead of set exitCode because this needs to be shut off immediately
+      // exit instead of set exitCode because this needs to be shut off immediately
+      process.exit(503);
     }
 
     if (msg.author.bot)
