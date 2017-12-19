@@ -17,7 +17,7 @@ class JsonSeedRepository {
       if (!args)
         throw new Error('args must be provided to generate seed data');
       if (!args.races || !args.races.length)
-        throw new Error('at least one race must be provided to generate see data');
+        throw new Error('at least one race must be provided to generate seed data');
       if (!args.genders || !args.genders.length)
         throw new Error('at least one gender must be provided to generate seed data');
 

@@ -48,7 +48,7 @@ describe('json seed repository async', () => {
   it('should return error without race args', () => repo.getSeedDataAsync({
     genders: ['male'],
   }).then((seedData) => {
-    assert.strictEqual(seedData.error, 'at least one race must be provided to generate see data');
+    assert.strictEqual(seedData.error, 'at least one race must be provided to generate seed data');
   }));
 
   it('should return error without gender args', () => repo.getSeedDataAsync({
