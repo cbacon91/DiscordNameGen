@@ -13,10 +13,17 @@ const it = mocha.it;
 const assert = chai.assert;
 
 describe('name generator args parsers', () => {
-  let parser;
+  let parser, expectedDwarf, expectedHuman, expectedElf, expectedHalfling;
 
   mocha.beforeEach(() => {
     parser = new argsParsers.NameGeneratorArgsParser();
+
+    // setup common expectations for deepEquals
+    // these are hard-coded instead of pulled from races.js to test backwards compatibility
+    expectedDwarf = { name: 'dwarf', isClanBased: true, keys: ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'] };
+    expectedHalfling = { name: 'halfling', isClanBased: true, keys: ['h', 'halfling', 'hobbit', 'kender'] };
+    expectedElf = { name: 'elf', keys: ['e', 'elf', 'elfen', 'elven', 'elfish', 'elvish'] };
+    expectedHuman = { name: 'human', keys: ['human', 'person', 's', 'standard', 'n', 'normal'] };
   });
 
   mocha.afterEach(() => {
@@ -59,25 +66,25 @@ describe('name generator args parsers', () => {
   });
 
   it('should parse race given correct input', () => {
-    assert.deepEqual(parser.parseRaces('d'), [{ name: 'dwarf', isClanBased: true }]);
-    assert.deepEqual(parser.parseRaces('dwarf'), [{ name: 'dwarf', isClanBased: true }]);
-    assert.deepEqual(parser.parseRaces('halfling'), [{ name: 'halfling', isClanBased: true }]);
-    assert.deepEqual(parser.parseRaces('hobbit'), [{ name: 'halfling', isClanBased: true }]);
+    assert.deepEqual(parser.parseRaces('d'), [expectedDwarf]);
+    assert.deepEqual(parser.parseRaces('dwarf'), [expectedDwarf]);
+    assert.deepEqual(parser.parseRaces('halfling'), [expectedHalfling]);
+    assert.deepEqual(parser.parseRaces('hobbit'), [expectedHalfling]);
   });
 
   it('should parse human and halfrace for half-elf and halfelf', () => {
-    assert.deepEqual(parser.parseRaces('half-elf'), [{ name: 'human' }, { name: 'elf' }]);
-    assert.deepEqual(parser.parseRaces('halfelf'), [{ name: 'human' }, { name: 'elf' }]);
-    assert.deepEqual(parser.parseRaces('half-dwarf'), [{ name: 'human' }, { name: 'dwarf', isClanBased: true }]);
-    assert.deepEqual(parser.parseRaces('halfhalfling'), [{ name: 'human' }, { name: 'halfling', isClanBased: true }]);
+    assert.deepEqual(parser.parseRaces('half-elf'), [expectedHuman, expectedElf]);
+    assert.deepEqual(parser.parseRaces('halfelf'), [expectedHuman, expectedElf]);
+    assert.deepEqual(parser.parseRaces('half-dwarf'), [expectedHuman, expectedDwarf]);
+    assert.deepEqual(parser.parseRaces('halfhalfling'), [expectedHuman, expectedHalfling]);
   });
 
   // is this test invalid? do we want it to random given bad input?
   it('should default to human given bad race input', () => {
     // should parseRaces throw error if not given a string?
-    assert.deepEqual(parser.parseRaces('bruh'), [{ name: 'human' }]);
-    assert.deepEqual(parser.parseRaces({}), [{ name: 'human' }]);
-    assert.deepEqual(parser.parseRaces([]), [{ name: 'human' }]);
+    assert.deepEqual(parser.parseRaces('bruh'), [expectedHuman]);
+    assert.deepEqual(parser.parseRaces({}), [expectedHuman]);
+    assert.deepEqual(parser.parseRaces([]), [expectedHuman]);
   });
 
   it('should parse gender given correct input', () => {
@@ -123,7 +130,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{ name: 'dwarf', isClanBased: true }],
+      races: [expectedDwarf],
       genders: ['female'],
       nameCount: 20,
       error: '',
@@ -137,7 +144,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{ name: 'dwarf', isClanBased: true }, { name: 'elf' }],
+      races: [expectedDwarf, expectedElf],
       genders: ['female'],
       nameCount: 20,
       error: '',
@@ -151,7 +158,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{ name: 'dwarf', isClanBased: true }],
+      races: [expectedDwarf],
       genders: ['female', 'male'],
       nameCount: 20,
       error: '',
@@ -165,7 +172,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{ name: 'human' }],
+      races: [expectedHuman],
       genders: ['female'],
       nameCount: 20,
       error: '',
@@ -179,7 +186,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{ name: 'dwarf', isClanBased: true }],
+      races: [expectedDwarf],
       genders: ['male'],
       nameCount: 20,
       error: '',
@@ -193,7 +200,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{ name: 'human' }],
+      races: [expectedHuman],
       genders: ['male'],
       nameCount: 20,
       error: '',
@@ -207,7 +214,7 @@ describe('name generator args parsers', () => {
     const parsed = parser.parseArgs(inArgs);
 
     assert.deepEqual(parsed, {
-      races: [{ name: 'human' }],
+      races: [expectedHuman],
       genders: ['male'],
       nameCount: 1,
       error: '',

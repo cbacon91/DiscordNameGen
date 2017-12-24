@@ -30,7 +30,7 @@ class JsonSeedRepository {
       seedData.selectedGender = uniqueGenders[Math.randomInt(0, uniqueGenders.length)];
 
       if (uniqueRaces.length > 1)
-        seedData.message += `Multiple races specified: generating ${seedData.selectedRace} names.${NEWLINE}`;
+        seedData.message += `Multiple races specified: generating ${seedData.selectedRace.name} names.${NEWLINE}`;
       if (uniqueGenders.length > 1)
         seedData.message += `Multiple genders specified: generating ${seedData.selectedGender} names.${NEWLINE}`;
     } catch (e) {
@@ -41,6 +41,14 @@ class JsonSeedRepository {
   }
 
   async getSeedDataAsync(args) {
+    // TODO;
+    // getSeedData for each repository should only care about the following:
+    // 1) race, string (or Race class?), required
+    //   a) there should be a central "raceRepository" somewhere probably
+    // 2) gender, string (or Gender class?), optional
+    //   a) if !race.isGenderless, and gender is not supplied, throw error
+    // returns { given: []string, surname: []string, race Race, gender Gender }
+
     const seedData = this.validateArgs(args);
     if (seedData.error)
       return seedData;

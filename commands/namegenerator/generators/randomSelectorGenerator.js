@@ -33,6 +33,7 @@ class RandomSelectorGenerator extends seeds.SeedDataRepository {
         name += ` ${seedData.surnameSeeds[selected]}`;
       }
 
+      // todo: ignore duplicates
       generated.names.push(name);
     }
 

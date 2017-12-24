@@ -46,7 +46,10 @@ function init() {
     juan.commands.set('help', new commands.HelpCommand(juan));
     juan.commands.set('name', new commands.NameGenerationCommand(juan,
       new commands.argsParsers.NameGeneratorArgsParser(),
-      commands.namegenerator.generators.NameGeneratorFactory(config.generator.type, config.generator.seedSource)));
+      commands.namegenerator.generators.NameGeneratorFactory(
+        config.generator.type, config.generator.seedSource
+      ))
+    );
 
     console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
   }
@@ -81,7 +84,7 @@ function init() {
 
     const args = msg.content.substring(offset + userInput.length).trim();
     command.run(msg, args);
-  } 
+  }
 }
 
 module.exports = runBot;

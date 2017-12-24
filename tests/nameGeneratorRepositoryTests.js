@@ -49,14 +49,6 @@ describe('api generator', () => {
   });
 });
 
-describe('markov chain generator', () => {
-  it('should throw error because not implemented', () => {
-    assert.throws(() => {
-      new generators.MarkovChainGenerator();
-    });
-  });
-});
-
 describe('name generator repository - container', () => {
   it('should throw error if inner generator not supplied', () => {
     assert.throws(() => {
