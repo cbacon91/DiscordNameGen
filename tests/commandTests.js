@@ -5,7 +5,6 @@ const chai = require('chai');
 const requireInject = require('require-inject');
 const extensions = require('../src/extensions');
 
-let lastLoggedMsg = '';
 const commands = requireInject('../src/commands', {
   os: {
     EOL: '\r\n',
@@ -19,11 +18,9 @@ const it = mocha.it;
 const assert = chai.assert;
 
 mocha.beforeEach(() => {
-  lastLoggedMsg = '';
 });
 
 mocha.afterEach(() => {
-  lastLoggedMsg = '';
 });
 
 describe('command base', () => {
