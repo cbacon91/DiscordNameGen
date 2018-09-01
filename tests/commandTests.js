@@ -3,17 +3,12 @@
 const mocha = require('mocha');
 const chai = require('chai');
 const requireInject = require('require-inject');
-const extensions = require('../extensions');
+const extensions = require('../src/extensions');
 
 let lastLoggedMsg = '';
-const commands = requireInject('../commands', {
+const commands = requireInject('../src/commands', {
   os: {
     EOL: '\r\n',
-  },
-  '../logger': {
-    log: (msg) => {
-      lastLoggedMsg = msg;
-    },
   },
 });
 
@@ -64,25 +59,6 @@ describe('command base', () => {
       .send('test msg', cmdMock)
       .then((reply) => {
         assert.strictEqual(reply, 'test msg');
-      });
-  });
-
-  it('should log error if error', () => {
-    const base = new commands.CommandBase({}, {
-      name: 'test',
-    });
-    const cmdMock = {
-      channel: {
-        send: msg => Promise.reject(msg),
-      },
-      content: 'command',
-    };
-
-    return base
-      .send('test msg', cmdMock)
-      .then(() => {
-        // success cb; it failed, ignore
-        assert.strictEqual(lastLoggedMsg, 'Failed on replying :: Original message: "command" :: Error: "test msg"');
       });
   });
 });

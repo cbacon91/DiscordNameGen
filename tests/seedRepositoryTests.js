@@ -3,9 +3,9 @@
 const mocha = require('mocha');
 const chai = require('chai');
 const requireInject = require('require-inject');
-const extensions = require('../extensions');
+const extensions = require('../src/extensions');
 
-const seeds = requireInject('../commands/namegenerator/generators/seeds', {
+const seeds = requireInject('../src/commands/namegenerator/generators/seeds', {
   os: {
     EOL: '\r\n',
   },

@@ -2,7 +2,7 @@ const mocha = require('mocha');
 const chai = require('chai');
 const requireInject = require('require-inject');
 
-const argsParsers = requireInject('../commands/argsParsers', {
+const argsParsers = requireInject('../src/commands/argsParsers', {
   os: {
     EOL: '\r\n',
   },

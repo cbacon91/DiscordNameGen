@@ -4,7 +4,7 @@
 const mocha = require('mocha');
 const chai = require('chai');
 const requireInject = require('require-inject');
-const extensions = require('../extensions');
+const extensions = require('../src/extensions');
 
 const mockSeedDataRepository =
     class SeedDataRepository {
@@ -29,8 +29,8 @@ const mockSeedDataRepository =
       }
     };
 
-const generators = requireInject('../commands/namegenerator/generators', {
-  '../commands/namegenerator/generators/seeds': {
+const generators = requireInject('../src/commands/namegenerator/generators', {
+  '../src/commands/namegenerator/generators/seeds': {
     SeedDataRepository: mockSeedDataRepository,
   },
 });
