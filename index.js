@@ -1,5 +1,5 @@
-const extensionsInit = require('./extensions');
-const RunBot = require('./bot');
+const extensionsInit = require('./src/extensions');
+const RunBot = require('./src/bot');
 
 extensionsInit();
 RunBot();

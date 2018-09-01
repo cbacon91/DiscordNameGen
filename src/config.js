@@ -1,6 +1,6 @@
 module.exports = {
   discord: { // discord settings
-    authToken: '',
+    authToken: 'Mzg1NDU4OTIzNDY3MDQ2OTEy.Dmyh6Q.pCtXmHqnK5_tnHkuMHg7SRBc_4s',
     defaultPrefix: '%',
     devServer: '',
   },

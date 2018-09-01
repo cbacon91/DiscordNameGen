@@ -1,5 +1,4 @@
 const newline = require('os').EOL;
-const Logger = require('../logger');
 
 class CommandBase {
   constructor(client, cmdData) {
@@ -26,11 +25,11 @@ class CommandBase {
           // long-term - log these so I can see what is most common?
           // just return the message back, useful for testing at least
           , (r) => {
-            Logger.log(`Failed on replying :: Original message: "${originalCommand.content}" :: Error: "${r}"`);
+            console.log(`Failed on replying :: Original message: "${originalCommand.content}" :: Error: "${r}"`);
             return r;
           });
     } catch (e) {
-      Logger.log(e);
+      console.log(e);
       return e;
     }
   }

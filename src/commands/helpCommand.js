@@ -1,5 +1,5 @@
 const config = require('../config');
-const pkge = require('../package');
+const pkge = require('../../package');
 const CommandBase = require('./commandBase');
 
 class HelpCommand extends CommandBase {
