@@ -1,5 +1,4 @@
 const config = require('../config');
-const pkge = require('../../package');
 const CommandBase = require('./commandBase');
 
 class HelpCommand extends CommandBase {
@@ -20,7 +19,7 @@ class HelpCommand extends CommandBase {
       prefix = config.discord.defaultPrefix;
 
     let helpText = 'For more detailed comments on commands, visit the full readme at ';
-    helpText += pkge.homepage;
+    helpText += process.env.npm_package_homepage;
     helpText += this.NEWLINE;
 
     helpText += `\`\`\`asciidoc${this.NEWLINE}`;
@@ -45,7 +44,7 @@ class HelpCommand extends CommandBase {
     helpText += this.NEWLINE;
     helpText += '===============================';
     helpText += this.NEWLINE + this.NEWLINE;
-    helpText += `Version ${pkge.version} \`\`\``;
+    helpText += `Version ${process.env.npm_package_version} \`\`\``;
     helpText += 'Bugs? Questions? Feel free to contact my creator directly at ';
     helpText += config.discord.devServer ? config.discord.devServer : 'the github link above';
 

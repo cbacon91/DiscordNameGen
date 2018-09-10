@@ -8,7 +8,7 @@
     "test": "mocha tests --harmony",
     "build": "npm install & npm run lint & npm test",
     "dev": "npm run build & node --inspect=127.0.0.1:9229 --harmony .",
-    "start": "npm install & node . --harmony"
+    "start": "npm install & rmdir dist -recurse & tsc & node .\\dist\\index.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.3.0",
     "mocha": "^5.2.0",
-    "require-inject": "^1.4.0"
+    "require-inject": "^1.4.0",
+    "typescript": "^3.0.3"
   }
 }
