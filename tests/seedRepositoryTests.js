@@ -9,10 +9,7 @@ const seeds = requireInject('../src/commands/namegenerator/generators/seeds', {
   os: {
     EOL: '\r\n',
   },
-  fs: {
-    readFileSync: (path, options) => '["juan", "charles"]',
-    readFileAsync: (path, options) => Promise.resolve('["juan", "charles"]'),
-  },
+  'request-promise-native': uri => Promise.resolve('["juan", "charles"]')
 });
 
 extensions(); // load up Math.randomInt
@@ -80,22 +77,4 @@ describe('json seed repository async', () => {
       'charles',
     ]);
   }));
-});
-
-// todo fix after implement
-describe('mongo seed repository', () => {
-  it('should throw not implemented', () => {
-    assert.throws(() => {
-      new seeds.MongoSeedRepository();
-    });
-  });
-});
-
-// todo fix after implement
-describe('api seed repository', () => {
-  it('should throw not implemented', () => {
-    assert.throws(() => {
-      new seeds.ApiSeedRepository();
-    });
-  });
 });

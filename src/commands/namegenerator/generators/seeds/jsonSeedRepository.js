@@ -1,6 +1,7 @@
 const NEWLINE = require('os').EOL;
 const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs'));
+const request = require('request-promise-native');
+const config = require('../../../../config');
 
 class JsonSeedRepository {
   validateArgs(args) {
@@ -53,21 +54,25 @@ class JsonSeedRepository {
     if (seedData.error)
       return seedData;
 
-    let fileName = `${__dirname}/jsonSeedData/${seedData.selectedRace.name}`;
+    const srcUri = config.api.srcUri;
+
+    let requestUri = `${srcUri}/${seedData.selectedRace.name}`;
     if (!seedData.selectedRace.isGenderless)
-      fileName += `.${seedData.selectedGender}`;
-    fileName += '.json';
+      requestUri += `.${seedData.selectedGender}`;
+    requestUri += '.json';
 
-    const surnameFile = `${__dirname}/jsonSeedData/${seedData.selectedRace.name}.surname.json`;
+    const surfileRequestUri = `${srcUri}/${seedData.selectedRace.name}.surname.json`;
 
-    const filereads = [];
+    const requests = [];
     const generateSurname = !seedData.selectedRace.lacksSurname;
-    filereads.push(fs.readFileAsync(fileName, 'utf8'));
+
+    requests.push(request(requestUri));
 
     if (generateSurname)
-      filereads.push(fs.readFileAsync(surnameFile, 'utf8'));
+      requests.push(request(surfileRequestUri));
 
-    return Promise.all(filereads).then((results) => {
+    // todo await
+    return Promise.all(requests).then((results) => {
       seedData.seeds = JSON.parse(results[0]);
 
       if (generateSurname)
@@ -75,7 +80,7 @@ class JsonSeedRepository {
 
       return seedData;
     }).catch((err) => {
-      console.log(`Error while generating seed data for JsonSeedRepository. ${NEWLINE}Filename: ${fileName} ${NEWLINE}Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);
+      console.log(`Error while generating seed data for JsonSeedRepository. ${NEWLINE}Filename: ${requestUri} ${NEWLINE}Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);
       console.log(err);
       seedData.error = 'An error occurred while generating seed data for name generation. This has been logged and will be fixed soon:tm:.';
       return seedData;

@@ -41,14 +41,6 @@ const describe = mocha.describe;
 const it = mocha.it;
 const assert = chai.assert;
 
-describe('api generator', () => {
-  it('should throw error because not implemented', () => {
-    assert.throws(() => {
-      new generators.ApiGenerator('url');
-    });
-  });
-});
-
 describe('name generator repository - container', () => {
   it('should throw error if inner generator not supplied', () => {
     assert.throws(() => {
