@@ -1,10 +1,11 @@
 import { Race } from "../models/race";
+import { Races } from "../models/races";
 
-export interface SeedData {
-  seeds: string[];
-  surnameSeeds: string[];
-  message: string;
-  error: string;
-  selectedRace: Race;
-  selectedGender: string;
+export class SeedData {
+  seeds: string[] = [];
+  surnameSeeds: string[] = [];
+  message: string[] = [];
+  error: string[] = [];
+  selectedRace: Race = Races.Human;
+  selectedGender: string = '';
 }

@@ -10,10 +10,10 @@ const cmdTitle = 'name';
 
 export class NameCommand extends CommandBase {
   constructor(
-      client: DiscordClient, 
-      protected readonly argsParser: NameArgsParser, 
-      protected readonly nameRepository: NameRepository
-    ) {
+    client: DiscordClient,
+    protected readonly argsParser: NameArgsParser,
+    protected readonly nameRepository: NameRepository
+  ) {
 
     super(client, {
       name: cmdTitle,
@@ -25,30 +25,27 @@ export class NameCommand extends CommandBase {
   async run(message: Message, args: string) {
     const parsedArgs = this.argsParser.parseArgs(args);
 
-    if (parsedArgs.error)
-      return this.send(`**${parsedArgs.error}**`, message);
+    if (parsedArgs.error.length)
+      return this.send([...parsedArgs.error.map((e: string) => `**${e}**`)], message);
 
     const generated = await this.nameRepository.getNamesAsync(parsedArgs);
 
-    if (generated.error)
-      return this.send(`**${generated.error}**`, message);
+    if (generated.error.length)
+      return this.send([...generated.error.map((e: string) => `**${e}**`)], message);
 
-    return this.send(this.buildReply(parsedArgs, generated), message);
+    const l = this.buildReply(parsedArgs, generated);
+    return this.send(l, message);
   }
 
-  buildReply(parsedArgs: NameArgs, generated: GeneratedNames): string {
-    let replyMessage = '';
+  buildReply(parsedArgs: NameArgs, generated: GeneratedNames): string[] {
+    let replyMessage: string[] = [];
 
-    if (parsedArgs.message || generated.message) {
-      replyMessage += `*${parsedArgs.message}${generated.message}`;
-      // cut off the ending this.NEWLINE so the * can be next to a character
-      replyMessage = replyMessage.substring(0, replyMessage.length - 2);
-      replyMessage += '*'.concat(this.NEWLINE, this.NEWLINE);
-    }
-
-    let nameList = generated.names.join(this.NEWLINE);
-
-    replyMessage += nameList;
+    replyMessage = [
+      ...parsedArgs.message.map((m: string) => `*${m}*`),
+      ...generated.message.map((m: string) => `*${m}*`),
+      '',
+      ...generated.names
+    ]
 
     return replyMessage;
   }

@@ -20,11 +20,10 @@ export class HelpCommand extends CommandBase {
     if (message.guild)
       prefix = config.discord.defaultPrefix;
 
-    let helpText = 'For more detailed comments on commands, visit the full readme at ';
-    helpText += process.env.npm_package_homepage;
-    helpText += this.NEWLINE;
+    let helpText = [`For more detailed comments on commands, visit the full readme at ${process.env.npm_package_homepage}`];
+    helpText.push('');
 
-    helpText += `\`\`\`asciidoc${this.NEWLINE}`;
+    helpText.push('```asciidoc');
 
     // todo..
     // helpText += 'You can also specify `help {commandName}` for full details on the command. ';
@@ -32,23 +31,22 @@ export class HelpCommand extends CommandBase {
     // helpText += Use them at your discretion.';
 
     this.client.commands.forEach((command: CommandBase) => {
-      helpText += prefix + command.commandData.name;
+      let cmdText = prefix + command.commandData.name;
 
       if (command.commandData.usage)
-        helpText += ` ::  ${command.commandData.usage}`;
+      cmdText += ` ::  ${command.commandData.usage}`;
 
       if (command.commandData.description)
-        helpText += ` ::  ${command.commandData.description}`;
+      cmdText += ` ::  ${command.commandData.description}`;
 
-      helpText += this.NEWLINE;
+      helpText.push(cmdText);
     });
 
-    helpText += this.NEWLINE;
-    helpText += '===============================';
-    helpText += this.NEWLINE + this.NEWLINE;
-    helpText += `Version ${process.env.npm_package_version} \`\`\``;
-    helpText += 'Bugs? Questions? Feel free to contact my creator directly at ';
-    helpText += config.discord.devServer ? config.discord.devServer : 'the github link above';
+    helpText.push('===============================');
+    helpText.push('');
+    helpText.push(`Version ${process.env.npm_package_version}`);
+    helpText.push('```');
+    helpText.push('Bugs? Questions? Feel free to contact my creator directly at the github link above');
 
     return this.send(helpText, message);
   }

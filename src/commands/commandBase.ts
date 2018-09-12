@@ -13,7 +13,11 @@ export abstract class CommandBase {
 
   public abstract run(msg: Message, _args: string): void;
 
-  send(messageText: string, originalMessage: Message) {
+  send(messageText: string | string[], originalMessage: Message) {
+    if(!messageText || !messageText.length) {
+      messageText = '**An error occurred while generating a reply. Please try again later.**';
+    }
+
     try {
       return originalMessage.channel
         .send(messageText)

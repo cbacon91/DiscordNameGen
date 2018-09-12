@@ -2,8 +2,6 @@ import { NameArgs } from "./nameArgs";
 import { Races, RaceKeys, RaceFactory } from "../models/races";
 import { Race } from "../models/race";
 
-const NEWLINE = require('os').EOL;
-
 const maxNameCount = 20;
 const defaultGender = 'male';
 const defaultRace = Races.Human;
@@ -18,13 +16,7 @@ export class NameArgsParser {
 
   parseArgs(inArgs: string) {
     const args = inArgs.trim().split(' ').filter(arg => !!arg);
-    const parsedArgs = {
-      races: [],
-      genders: [],
-      nameCount: 1,
-      error: '',
-      message: '',
-    } as NameArgs;
+    const parsedArgs = new NameArgs();
 
     try {
       args.forEach((arg) => {
@@ -43,15 +35,16 @@ export class NameArgsParser {
 
       if (!parsedArgs.genders.length) {
         parsedArgs.genders.push(defaultGender);
-        parsedArgs.message += `Gender not specified or found; using default (${defaultGender})${NEWLINE}`;
+        parsedArgs.message.push(`Gender not specified or found; using default (${defaultGender})`);
       }
       if (!parsedArgs.races.length) {
         parsedArgs.races.push(defaultRace);
-        parsedArgs.message += `Race not specified or found; using default (${defaultRace.name})${NEWLINE}`;
+        parsedArgs.message.push(`Race not specified or found; using default (${defaultRace.name})`);
       }
     } catch (e) {
-      parsedArgs.error = e.message; // if there is an error, just get out of here
+      parsedArgs.error.push(e.message); // if there is an error, just get out of here
     }
+
     return parsedArgs;
   }
 
@@ -64,7 +57,7 @@ export class NameArgsParser {
     let count = Math.floor(Number(inArg));
 
     if (count > maxNameCount) {
-      parsedArgs.message += `Exceeded max name count; using max (${maxNameCount})${NEWLINE}`;
+      parsedArgs.message.push(`Exceeded max name count; using max (${maxNameCount})`);
       count = maxNameCount;
     }
 

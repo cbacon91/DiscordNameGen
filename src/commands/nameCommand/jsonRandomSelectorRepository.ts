@@ -6,8 +6,6 @@ import { NameArgs } from "./nameArgs";
 import { GeneratedNames } from "./generatedNames";
 import { Utility } from "../../utility";
 
-const NEWLINE = require('os').EOL;
-
 export class JsonRandomSelectorRepository extends NameRepository {
 
   constructor(
@@ -18,20 +16,16 @@ export class JsonRandomSelectorRepository extends NameRepository {
 
   async getNamesAsync(args: NameArgs): Promise<GeneratedNames> {
 
-    const generated = {
-      names: [],
-      error: '',
-      message: '',
-    } as GeneratedNames;
+    const generated = new GeneratedNames();
 
     const seedData = await this.getSeedDataAsync(args);
 
-    if (seedData.error) {
+    if (seedData.error.length) {
       generated.error = seedData.error;
       return generated;
     }
-    if (seedData.message)
-      generated.message += seedData.message;
+
+    generated.message = seedData.message;
 
     for (let i = 0; i < args.nameCount; i++) {
       let selected = this.utility.intBetween(0, seedData.seeds.length);
@@ -50,14 +44,7 @@ export class JsonRandomSelectorRepository extends NameRepository {
   }
 
   determineSeeding(args: NameArgs) {
-    const seedData = {
-      seeds: [],
-      surnameSeeds: [],
-      message: '',
-      error: '',
-      selectedRace: {} as Race,
-      selectedGender: '',
-    } as SeedData;
+    const seedData = new SeedData();
 
     try {
       if (!args)
@@ -76,11 +63,11 @@ export class JsonRandomSelectorRepository extends NameRepository {
       seedData.selectedGender = uniqueGenders[this.utility.intBetween(0, uniqueGenders.length)];
 
       if (uniqueRaces.length > 1)
-        seedData.message += `Multiple races specified: generating ${seedData.selectedRace.name} names.${NEWLINE}`;
+        seedData.message.push(`Multiple races specified: generating ${seedData.selectedRace.name} names.`);
       if (uniqueGenders.length > 1)
-        seedData.message += `Multiple genders specified: generating ${seedData.selectedGender} names.${NEWLINE}`;
+        seedData.message.push(`Multiple genders specified: generating ${seedData.selectedGender} names.`);
     } catch (e) {
-      seedData.error = e.message;
+      seedData.error.push(e.message);
     }
 
     return seedData;
@@ -96,7 +83,7 @@ export class JsonRandomSelectorRepository extends NameRepository {
     // returns { given: []string, surname: []string, race Race, gender Gender }
 
     const seedData = this.determineSeeding(args);
-    if (seedData.error)
+    if (seedData.error.length)
       return seedData;
 
     const srcUri = config.api.srcUri;
@@ -125,9 +112,11 @@ export class JsonRandomSelectorRepository extends NameRepository {
 
       return seedData;
     }).catch((err) => {
-      console.log(`Error while generating seed data for JsonSeedRepository. ${NEWLINE}Filename: ${requestUri} ${NEWLINE}Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);
+      console.log(`Error while generating seed data for JsonSeedRepository.`);
+      console.log(`Filename: ${requestUri}`);
+      console.log(`Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);
       console.log(err);
-      seedData.error = 'An error occurred while generating seed data for name generation. This has been logged and will be fixed soon:tm:.';
+      seedData.error.push('An error occurred while generating seed data for name generation. This has been logged and will be fixed soon:tm:.');
       return seedData;
     });
   }

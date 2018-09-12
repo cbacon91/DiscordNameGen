@@ -1,5 +1,5 @@
-export interface GeneratedNames {
-  names: string[];
-  error: string;
-  message: string;
+export class GeneratedNames {
+  names: string[] = [];
+  error: string[] = [];
+  message: string[] = [];
 }
