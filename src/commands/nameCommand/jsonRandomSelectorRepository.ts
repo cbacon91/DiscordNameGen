@@ -1,18 +1,63 @@
-const NEWLINE = require('os').EOL;
-const Promise = require('bluebird');
-const request = require('request-promise-native');
-const config = require('../../../../config');
+import { NameRepository } from "./nameRepository";
+import { SeedData } from "./seedData";
+import { config } from "../../config";
+import { Race } from "../models/race";
+import { NameArgs } from "./nameArgs";
+import { GeneratedNames } from "./generatedNames";
+import { Utility } from "../../utility";
 
-class JsonSeedRepository {
-  validateArgs(args) {
+const NEWLINE = require('os').EOL;
+
+export class JsonRandomSelectorRepository extends NameRepository {
+
+  constructor(
+    private readonly utility: Utility,
+  ){
+    super();
+  }
+
+  async getNamesAsync(args: NameArgs): Promise<GeneratedNames> {
+
+    const generated = {
+      names: [],
+      error: '',
+      message: '',
+    } as GeneratedNames;
+
+    const seedData = await this.getSeedDataAsync(args);
+
+    if (seedData.error) {
+      generated.error = seedData.error;
+      return generated;
+    }
+    if (seedData.message)
+      generated.message += seedData.message;
+
+    for (let i = 0; i < args.nameCount; i++) {
+      let selected = this.utility.intBetween(0, seedData.seeds.length);
+      let name = seedData.seeds[selected];
+
+      if (!seedData.selectedRace.lacksSurname) {
+        selected = this.utility.intBetween(0, seedData.surnameSeeds.length);
+        name += ` ${seedData.surnameSeeds[selected]}`;
+      }
+
+      // todo: ignore duplicates
+      generated.names.push(name);
+    }
+
+    return generated;
+  }
+
+  determineSeeding(args: NameArgs) {
     const seedData = {
       seeds: [],
       surnameSeeds: [],
       message: '',
       error: '',
-      selectedRace: {},
+      selectedRace: {} as Race,
       selectedGender: '',
-    };
+    } as SeedData;
 
     try {
       if (!args)
@@ -23,12 +68,12 @@ class JsonSeedRepository {
         throw new Error('at least one gender must be provided to generate seed data');
 
       const uniqueGenders = [...new Set(args.genders)];
-      const uniqueRaces = [];
-      const isNewUniqueRace = newRace => !uniqueRaces.map(r => r.name).includes(newRace.name);
-      args.races.filter(isNewUniqueRace).forEach(r => uniqueRaces.push(r));
+      const uniqueRaces: Race[] = [];
+      const isNewUniqueRace = (newRace: Race) => !uniqueRaces.map(r => r.name).includes(newRace.name);
+      args.races.filter(isNewUniqueRace).forEach((r: Race) => uniqueRaces.push(r));
 
-      seedData.selectedRace = uniqueRaces[Math.randomInt(0, uniqueRaces.length)];
-      seedData.selectedGender = uniqueGenders[Math.randomInt(0, uniqueGenders.length)];
+      seedData.selectedRace = uniqueRaces[this.utility.intBetween(0, uniqueRaces.length)];
+      seedData.selectedGender = uniqueGenders[this.utility.intBetween(0, uniqueGenders.length)];
 
       if (uniqueRaces.length > 1)
         seedData.message += `Multiple races specified: generating ${seedData.selectedRace.name} names.${NEWLINE}`;
@@ -41,7 +86,7 @@ class JsonSeedRepository {
     return seedData;
   }
 
-  async getSeedDataAsync(args) {
+  async getSeedDataAsync(args: NameArgs): Promise<SeedData> {
     // TODO;
     // getSeedData for each repository should only care about the following:
     // 1) race, string (or Race class?), required
@@ -50,7 +95,7 @@ class JsonSeedRepository {
     //   a) if !race.isGenderless, and gender is not supplied, throw error
     // returns { given: []string, surname: []string, race Race, gender Gender }
 
-    const seedData = this.validateArgs(args);
+    const seedData = this.determineSeeding(args);
     if (seedData.error)
       return seedData;
 
@@ -66,10 +111,10 @@ class JsonSeedRepository {
     const requests = [];
     const generateSurname = !seedData.selectedRace.lacksSurname;
 
-    requests.push(request(requestUri));
+    requests.push(this.utility.request(requestUri));
 
     if (generateSurname)
-      requests.push(request(surfileRequestUri));
+      requests.push(this.utility.request(surfileRequestUri));
 
     // todo await
     return Promise.all(requests).then((results) => {
@@ -87,5 +132,3 @@ class JsonSeedRepository {
     });
   }
 }
-
-module.exports = JsonSeedRepository;

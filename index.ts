@@ -1,11 +1,11 @@
-// const extensionsInit = require('./src/extensions');
-
 import { DiscordClient } from "./src/discordClient";
 import { HelpCommand } from "./src/commands/helpCommand";
 import { config } from './src/config';
 import { Message } from "discord.js";
-
-// extensionsInit();
+import { NameCommand } from "./src/commands/nameCommand";
+import { NameArgsParser } from "./src/commands/namecommand/nameArgsParser";
+import { JsonRandomSelectorRepository } from "./src/commands/namecommand/jsonRandomSelectorRepository";
+import { Utility } from "./src/utility";
 
 // wait five minutes and try again .. The most common crash is discord losing connection,
 // and trying again immediately would fail as well.
@@ -48,14 +48,11 @@ function init() {
   }
 
   function onReady() {
-    juan.commands = new Map();
     juan.commands.set('help', new HelpCommand(juan));
-    // juan.commands.set('name', new NameGenerationCommand(juan,
-    //   new commands.argsParsers.NameGeneratorArgsParser(),
-    //   commands.namegenerator.generators.NameGeneratorFactory(
-    //     config.generator.type, config.generator.seedSource
-      // ))
-    // );
+    juan.commands.set('name', new NameCommand(juan,
+      new NameArgsParser(),
+      new JsonRandomSelectorRepository(new Utility())
+    ));
 
     console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
   }

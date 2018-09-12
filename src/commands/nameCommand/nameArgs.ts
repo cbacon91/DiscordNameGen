@@ -1,6 +1,6 @@
 import { Race } from "../models/race";
 
-export class NameArgs {
+export interface NameArgs {
   races: Race[];
   genders: string[];
   nameCount: number;

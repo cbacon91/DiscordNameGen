@@ -1,4 +1,4 @@
-export class Race {
+export interface Race {
   name: string;
   isClanBase: boolean;
   lacksSurname: boolean;

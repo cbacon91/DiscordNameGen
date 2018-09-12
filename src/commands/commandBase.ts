@@ -1,5 +1,6 @@
 import { CommandData } from "./commandData";
-import { Message, Client } from "discord.js";
+import { Message } from "discord.js";
+import { DiscordClient } from "../discordClient";
 
 export abstract class CommandBase {
 
@@ -10,7 +11,7 @@ export abstract class CommandBase {
     public readonly commandData: CommandData
   ) {}
 
-  public abstract run(msg: Message, args: string): void;
+  public abstract run(msg: Message, _args: string): void;
 
   send(messageText: string, originalMessage: Message) {
     try {

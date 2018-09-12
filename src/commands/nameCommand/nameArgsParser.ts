@@ -1,4 +1,5 @@
-import { NameArgs } from "./nameGeneratorArgs";
+import { Race } from "../models/race";
+import { NameArgs } from "./nameArgs";
 
 const NEWLINE = require('os').EOL;
 const races = require('../models/races');
@@ -12,7 +13,7 @@ const maleKeys = ['m', 'male', 'man', 'boy'];
 const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
 
-export class NameGeneratorArgsParser {
+export class NameArgsParser {
   parseArgs(inArgs: string) {
     const args = inArgs.trim().split(' ').filter(arg => !!arg);
     const parsedArgs = {

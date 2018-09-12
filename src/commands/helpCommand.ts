@@ -15,7 +15,7 @@ export class HelpCommand extends CommandBase {
   }
 
   // todo: enable 'help ${helpCmd} for more detail
-  async run(message: Message, args: string) {
+  async run(message: Message, _args: string) {
     let prefix = '';
     if (message.guild)
       prefix = config.discord.defaultPrefix;
