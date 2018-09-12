@@ -1,7 +1,11 @@
-const Discord = require('discord.js');
-const config = require('./config');
+import { DiscordClient } from "./discordClient";
+import { HelpCommand } from "./commands/helpCommand";
+import { Message } from "discord.js";
+import { config } from './config';
+// const Discord = require('discord.js');
+// const config = require('./config');
 
-const commands = require('./commands');
+// const commands = require('./commands');
 
 // wait five minutes and try again .. The most common crash is discord losing connection,
 // and trying again immediately would fail as well.
@@ -10,7 +14,7 @@ const retryIn = 5 * 60 * 1000; //
 const maxCrashes = 5;
 let crashes = 0; // if only it were that easy...
 
-function runBot() {
+export function runBot() {
   try {
     console.log(`Initializing Juan Charles for attempt number ${crashes} ...`);
     init();
@@ -28,7 +32,7 @@ function runBot() {
 }
 
 function init() {
-  const juan = new Discord.Client();
+  const juan = new DiscordClient();
   const token = config.discord.authToken;
 
   juan.login(token);
@@ -43,18 +47,18 @@ function init() {
 
   function onReady() {
     juan.commands = new Map();
-    juan.commands.set('help', new commands.HelpCommand(juan));
-    juan.commands.set('name', new commands.NameGenerationCommand(juan,
-      new commands.argsParsers.NameGeneratorArgsParser(),
-      commands.namegenerator.generators.NameGeneratorFactory(
-        config.generator.type, config.generator.seedSource
-      ))
-    );
+    juan.commands.set('help', new HelpCommand(juan));
+    // juan.commands.set('name', new NameGenerationCommand(juan,
+    //   new commands.argsParsers.NameGeneratorArgsParser(),
+    //   commands.namegenerator.generators.NameGeneratorFactory(
+    //     config.generator.type, config.generator.seedSource
+      // ))
+    // );
 
     console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
   }
 
-  function onMessage(msg) {
+  function onMessage(msg: Message) {
     if (msg.content === config.discord.authToken) {
       console.log(`Emergency shut-off requested by ${msg.author.username}#${msg.author.discriminator} id ${msg.author.id}`);
       // exit instead of set exitCode because this needs to be shut off immediately
@@ -86,5 +90,3 @@ function init() {
     command.run(msg, args);
   }
 }
-
-module.exports = runBot;

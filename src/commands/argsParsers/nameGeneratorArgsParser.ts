@@ -1,3 +1,5 @@
+import { NameArgs } from "./nameGeneratorArgs";
+
 const NEWLINE = require('os').EOL;
 const races = require('../models/races');
 
@@ -10,8 +12,8 @@ const maleKeys = ['m', 'male', 'man', 'boy'];
 const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
 
-class NameGeneratorArgsParser {
-  parseArgs(inArgs) {
+export class NameGeneratorArgsParser {
+  parseArgs(inArgs: string) {
     const args = inArgs.trim().split(' ').filter(arg => !!arg);
     const parsedArgs = {
       races: [],
@@ -19,7 +21,7 @@ class NameGeneratorArgsParser {
       nameCount: 1,
       error: '',
       message: '',
-    };
+    } as NameArgs;
 
     try {
       args.forEach((arg) => {
@@ -50,12 +52,12 @@ class NameGeneratorArgsParser {
     return parsedArgs;
   }
 
-  isCount(inArg) {
+  isCount(inArg: string): boolean {
     const n = Math.floor(Number(inArg));
     return String(n) === inArg && n >= 0;
   }
 
-  parseCount(inArg, parsedArgs) {
+  parseCount(inArg: string, parsedArgs: NameArgs): number {
     let count = Math.floor(Number(inArg));
 
     if (count > maxNameCount) {
@@ -66,32 +68,32 @@ class NameGeneratorArgsParser {
     return count;
   }
 
-  isGender(inArg) {
+  isGender(inArg: string): boolean {
     return genderKeys.includes(inArg);
   }
 
-  parseGender(inArg) {
+  parseGender(inArg: string): string {
     return femaleKeys.includes(inArg)
       ? 'female'
       : 'male';
   }
 
-  isRace(inArg) {
+  isRace(inArg: string): boolean {
     return races.RaceKeys.includes(inArg) || this.isHalfbreed(inArg);
   }
 
-  isHalfbreed(inArg) {
+  isHalfbreed(inArg: string): boolean {
     return typeof inArg === 'string' && inArg.startsWith('half') && inArg !== 'halfling';
   }
 
-  parseRaces(inArg) {
+  parseRaces(inArg: string): Race[] {
     if (this.isHalfbreed(inArg))
       return this.parseHalfbreedRace(inArg);
 
     return [races.RaceFactory(inArg)];
   }
 
-  parseHalfbreedRace(inArg) {
+  parseHalfbreedRace(inArg: string): Race[] {
     let race = inArg.substring('half'.length, inArg.length);
     if (race.startsWith('-'))
       race = race.substring(1, race.length);
@@ -99,5 +101,3 @@ class NameGeneratorArgsParser {
     return [defaultRace].concat(this.parseRaces(race));
   }
 }
-
-module.exports = NameGeneratorArgsParser;

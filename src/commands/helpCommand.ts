@@ -1,8 +1,10 @@
-const config = require('../config');
-const CommandBase = require('./commandBase');
+import { CommandBase } from './commandBase';
+import { config } from '../config';
+import { DiscordClient } from '../discordClient';
+import { Message } from 'discord.js';
 
-class HelpCommand extends CommandBase {
-  constructor(client) {
+export class HelpCommand extends CommandBase {
+  constructor(client: DiscordClient) {
     const cmdTitle = 'help';
 
     super(client, {
@@ -13,7 +15,7 @@ class HelpCommand extends CommandBase {
   }
 
   // todo: enable 'help ${helpCmd} for more detail
-  async run(message, args) {
+  async run(message: Message, args: string) {
     let prefix = '';
     if (message.guild)
       prefix = config.discord.defaultPrefix;
@@ -29,14 +31,14 @@ class HelpCommand extends CommandBase {
     // helpText += 'These are fully-fleshed out, and are walls of text.
     // helpText += Use them at your discretion.';
 
-    this.client.commands.forEach((command) => {
-      helpText += prefix + command.name;
+    this.client.commands.forEach((command: CommandBase) => {
+      helpText += prefix + command.commandData.name;
 
-      if (command.usage)
-        helpText += ` ::  ${command.usage}`;
+      if (command.commandData.usage)
+        helpText += ` ::  ${command.commandData.usage}`;
 
-      if (command.description)
-        helpText += ` ::  ${command.description}`;
+      if (command.commandData.description)
+        helpText += ` ::  ${command.commandData.description}`;
 
       helpText += this.NEWLINE;
     });
@@ -51,5 +53,3 @@ class HelpCommand extends CommandBase {
     return this.send(helpText, message);
   }
 }
-
-module.exports = HelpCommand;
