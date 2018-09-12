@@ -1,12 +1,12 @@
-import { Race } from "../models/race";
 import { NameArgs } from "./nameArgs";
+import { Races, RaceKeys, RaceFactory } from "../models/races";
+import { Race } from "../models/race";
 
 const NEWLINE = require('os').EOL;
-const races = require('../models/races');
 
 const maxNameCount = 20;
 const defaultGender = 'male';
-const defaultRace = races.RaceFactory('human');
+const defaultRace = Races.Human;
 
 // todo: move gender specifics to genders namespace (see races)
 const maleKeys = ['m', 'male', 'man', 'boy'];
@@ -14,6 +14,8 @@ const femaleKeys = ['f', 'female', 'w', 'woman', 'girl'];
 const genderKeys = maleKeys.concat(femaleKeys);
 
 export class NameArgsParser {
+  constructor(private readonly raceFactory: RaceFactory){}
+
   parseArgs(inArgs: string) {
     const args = inArgs.trim().split(' ').filter(arg => !!arg);
     const parsedArgs = {
@@ -80,18 +82,18 @@ export class NameArgsParser {
   }
 
   isRace(inArg: string): boolean {
-    return races.RaceKeys.includes(inArg) || this.isHalfbreed(inArg);
+    return RaceKeys.includes(inArg) || this.isHalfbreed(inArg);
   }
 
   isHalfbreed(inArg: string): boolean {
-    return typeof inArg === 'string' && inArg.startsWith('half') && inArg !== 'halfling';
+    return inArg.startsWith('half') && inArg !== 'halfling';
   }
 
   parseRaces(inArg: string): Race[] {
     if (this.isHalfbreed(inArg))
       return this.parseHalfbreedRace(inArg);
 
-    return [races.RaceFactory(inArg)];
+    return [this.raceFactory.getRace(inArg)];
   }
 
   parseHalfbreedRace(inArg: string): Race[] {

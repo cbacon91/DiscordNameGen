@@ -1,6 +1,6 @@
 export interface Race {
   name: string;
-  isClanBase: boolean;
+  isClanBased: boolean;
   lacksSurname: boolean;
   isGenderless: boolean;
   keys: string[];

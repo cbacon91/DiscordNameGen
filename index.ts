@@ -6,6 +6,7 @@ import { NameCommand } from "./src/commands/nameCommand";
 import { NameArgsParser } from "./src/commands/namecommand/nameArgsParser";
 import { JsonRandomSelectorRepository } from "./src/commands/namecommand/jsonRandomSelectorRepository";
 import { Utility } from "./src/utility";
+import { RaceFactory } from "./src/commands/models/races";
 
 // wait five minutes and try again .. The most common crash is discord losing connection,
 // and trying again immediately would fail as well.
@@ -50,7 +51,7 @@ function init() {
   function onReady() {
     juan.commands.set('help', new HelpCommand(juan));
     juan.commands.set('name', new NameCommand(juan,
-      new NameArgsParser(),
+      new NameArgsParser(new RaceFactory()),
       new JsonRandomSelectorRepository(new Utility())
     ));
 
