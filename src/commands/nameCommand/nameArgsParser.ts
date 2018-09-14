@@ -3,8 +3,6 @@ import { Races, RaceKeys, RaceFactory } from "../models/races";
 import { Race } from "../models/race";
 
 const maxNameCount = 20;
-const defaultGender = 'male';
-const defaultRace = Races.Human;
 
 // todo: move gender specifics to genders namespace (see races)
 const maleKeys = ['m', 'male', 'man', 'boy'];
@@ -33,14 +31,20 @@ export class NameArgsParser {
         // simply ignore args that aren't any of the above
       });
 
-      if (!parsedArgs.genders.length) {
-        parsedArgs.genders.push(defaultGender);
-        parsedArgs.message.push(`Gender not specified or found; using default (${defaultGender})`);
-      }
       if (!parsedArgs.races.length) {
-        parsedArgs.races.push(defaultRace);
-        parsedArgs.message.push(`Race not specified or found; using default (${defaultRace.name})`);
+        const randomRace = this.raceFactory.random();
+        parsedArgs.races.push(randomRace);
+        parsedArgs.message.push(`Race not specified or found; using random (${randomRace.name})`);
       }
+
+      if (!parsedArgs.genders.length) {
+        const randomGender = Math.floor(Math.random() * 2) == 0
+          ? 'male'
+          : 'female';
+        parsedArgs.genders.push(randomGender);
+        parsedArgs.message.push(`Gender not specified or found; using random (${randomGender})`);
+      }
+
     } catch (e) {
       parsedArgs.error.push(e.message); // if there is an error, just get out of here
     }
@@ -79,7 +83,7 @@ export class NameArgsParser {
   }
 
   isHalfbreed(inArg: string): boolean {
-    return inArg.startsWith('half') && inArg !== 'halfling';
+    return inArg.startsWith('half') && inArg !== Races.Halfling.name;
   }
 
   parseRaces(inArg: string): Race[] {
@@ -94,6 +98,6 @@ export class NameArgsParser {
     if (race.startsWith('-'))
       race = race.substring(1, race.length);
 
-    return [defaultRace].concat(this.parseRaces(race));
+    return [Races.Human].concat(this.parseRaces(race));
   }
 }

@@ -1,7 +1,8 @@
 import { CommandBase } from './commandBase';
 import { config } from '../config';
 import { DiscordClient } from '../discordClient';
-import { Message } from 'discord.js';
+import { Message, RichEmbed } from 'discord.js';
+import { Field } from './models/field';
 
 export class HelpCommand extends CommandBase {
   constructor(client: DiscordClient) {
@@ -14,40 +15,38 @@ export class HelpCommand extends CommandBase {
     });
   }
 
-  // todo: enable 'help ${helpCmd} for more detail
-  async run(message: Message, _args: string) {
+  private getFields(prefix: string): Field[] {
+    const arr: Field[] = [];
+    this.client.commands.forEach((cmd: CommandBase) => {
+      arr.push({
+        name: prefix + cmd.commandData.usage,
+        value: cmd.commandData.description.replace('${prefix}', prefix)
+      });
+    });
+    return arr;
+  }
+
+  async run(message: Message, args: string): Promise<any> {
     let prefix = '';
     if (message.guild)
       prefix = config.discord.defaultPrefix;
 
-    let helpText = [`For more detailed comments on commands, visit the full readme at ${process.env.npm_package_homepage}`];
-    helpText.push('');
+    const detailRequest = this.client.commands.get(args);
+    return detailRequest && detailRequest.commandData.detailedHelp
+      ? this.detailedHelp(message, detailRequest)
+      : this.generalHelp(message, prefix);
+  }
 
-    helpText.push('```asciidoc');
+  private detailedHelp(message: Message, command: CommandBase): Promise<any> {
+    return this.sendEmbed(command.commandData.detailedHelp, message);
+  }
 
-    // todo..
-    // helpText += 'You can also specify `help {commandName}` for full details on the command. ';
-    // helpText += 'These are fully-fleshed out, and are walls of text.
-    // helpText += Use them at your discretion.';
-
-    this.client.commands.forEach((command: CommandBase) => {
-      let cmdText = prefix + command.commandData.name;
-
-      if (command.commandData.usage)
-      cmdText += ` ::  ${command.commandData.usage}`;
-
-      if (command.commandData.description)
-      cmdText += ` ::  ${command.commandData.description}`;
-
-      helpText.push(cmdText);
-    });
-
-    helpText.push('===============================');
-    helpText.push('');
-    helpText.push(`Version ${process.env.npm_package_version}`);
-    helpText.push('```');
-    helpText.push('Bugs? Questions? Feel free to contact my creator directly at the github link above');
-
-    return this.send(helpText, message);
+  private generalHelp(message: Message, prefix: string): Promise<any> {
+    return this.sendEmbed(new RichEmbed({
+      fields: this.getFields(prefix),
+      url: process.env.npm_package_homepage,
+      title: 'Bugs? Questions? Requests? Feel free to contact my creator directly by opening an issue on GitHub',
+      description: `In a server, you can issue commands prefixed with ${prefix}, or @me, or direct message me (no prefix required).`
+    }), message);
   }
 }

@@ -49,10 +49,12 @@ function init() {
   }
 
   function onReady() {
+    const util = new Utility();
+
     juan.commands.set('help', new HelpCommand(juan));
     juan.commands.set('name', new NameCommand(juan,
-      new NameArgsParser(new RaceFactory()),
-      new JsonRandomSelectorRepository(new Utility())
+      new NameArgsParser(new RaceFactory(util)),
+      new JsonRandomSelectorRepository(util)
     ));
 
     console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);

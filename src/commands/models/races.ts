@@ -1,32 +1,28 @@
 import { Race } from "./race";
+import { Utility } from "../../utility";
 
 const Dwarf = { 
   name: 'dwarf', 
-  isClanBased: true, 
   keys: ['d', 'dwarf', 'dwarfen', 'dwarven', 'dwarfish', 'dwarvish'] 
 } as Race;
 
 const Gnome = { 
   name: 'gnome', 
-  isClanBased: true, 
   keys: ['g', 'gnome', 'gnomish'] 
 } as Race;
 
 const Halfling = { 
   name: 'halfling', 
-  isClanBased: true, 
   keys: ['h', 'halfling', 'hobbit', 'kender'] 
 } as Race;
 
 const Dragonborn = { 
   name: 'dragonborn', 
-  isClanBased: true, 
   keys: ['dragon', 'dragonborn', 'dragonborne', 'dragonfolk', 'drag', 'drgn'] 
 } as Race;
 
 const Orc = { 
   name: 'orc', 
-  isClanBased: true, 
   keys: ['o', 'orc', 'ork', 'orcish', 'orkish'] 
 } as Race;
 
@@ -42,7 +38,7 @@ const Human = {
 } as Race;
 
 const Tiefling = { 
-  name: 'Tiefling', 
+  name: 'tiefling', 
   lacksSurname: true, 
   keys: ['t', 'tiefling', 'fiend', 'abyssal', 'demon', 'daemon', 'devil'] 
 } as Race;
@@ -61,11 +57,17 @@ RaceArray.forEach((r: Race) => RaceKeys = RaceKeys.concat(r.keys));
 
 export class RaceFactory {
 
+  constructor(private readonly utility: Utility){}
+
   getRace(key: string): Race {
     const selected = RaceArray.find((r: Race) => r.keys.includes(key));
     if(!selected)
       throw 'race not found, oh dear this shouldn\'t happen';
     return selected;
+  }
+
+  random(): Race {
+    return RaceArray[this.utility.intBetween(0, RaceArray.length - 1)];
   }
 }
 
