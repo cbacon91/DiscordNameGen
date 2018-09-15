@@ -1,21 +1,21 @@
 import { CommandBase } from "./commandBase";
-import { DiscordClient } from "../discordClient";
 import { Message, RichEmbed } from "discord.js";
 import { NameRepository } from "./namecommand/nameRepository";
 import { NameArgsParser } from "./namecommand/nameArgsParser";
 import { RaceArray } from "./models/races";
 import { Race } from "./models/race";
+import { Logger } from "../logger";
 
 const cmdTitle = 'name';
 
 export class NameCommand extends CommandBase {
   constructor(
-    client: DiscordClient,
+    logger: Logger,
     protected readonly argsParser: NameArgsParser,
     protected readonly nameRepository: NameRepository
   ) {
 
-    super(client, {
+    super(logger, {
       name: cmdTitle,
       usage: 'name elf female 20',
       description: 'Randomly selects a name from a list of pre-determined names based on race and gender (the base list comes from Xanathar\'s Guide to Everything). You can supply any number of races (or none), and I will choose a race at random and supply names for it. The order of parameters is not important, and no parameters are required. For more detailed help, use "${prefix}help name"',
@@ -38,7 +38,7 @@ export class NameCommand extends CommandBase {
       ...parsedArgs.message.map((m: string) => `*${m}*`),
       ...generated.message.map((m: string) => `*${m}*`),
       '',
-      ...generated.names
+      ...generated.names,
     ];
     return this.send(reply, message);
   }

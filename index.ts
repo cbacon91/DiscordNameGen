@@ -6,8 +6,11 @@ import { NameCommand } from "./src/commands/nameCommand";
 import { NameArgsParser } from "./src/commands/namecommand/nameArgsParser";
 import { JsonRandomSelectorRepository } from "./src/commands/namecommand/jsonRandomSelectorRepository";
 import { Utility } from "./src/utility";
-import { RaceFactory } from "./src/commands/models/races";
+import { RaceFactory } from "./src/commands/models/raceFactory";
+import { ConsoleLogger } from "./src/consoleLogger";
 
+
+const logger = new ConsoleLogger();
 // wait five minutes and try again .. The most common crash is discord losing connection,
 // and trying again immediately would fail as well.
 const retryIn = 5 * 60 * 1000; //
@@ -19,15 +22,15 @@ runBot();
 
 export function runBot() {
   try {
-    console.log(`Initializing Juan Charles for attempt number ${crashes} ...`);
+    logger.log(`Initializing Juan Charles for attempt number ${crashes} ...`);
     init();
   } catch (error) {
     crashes += 1;
-    console.log(`Encountered error # ${crashes}:`);
-    console.log(error);
+    logger.log(`Encountered error # ${crashes}:`);
+    logger.log(error);
 
     if (crashes < maxCrashes) {
-      console.log(`Retrying in ${retryIn / 1000 / 60} minutes.`);
+      logger.log(`Retrying in ${retryIn / 1000 / 60} minutes.`);
       setTimeout(runBot, retryIn);
     } else
       process.exit(500); // just let it die
@@ -51,18 +54,18 @@ function init() {
   function onReady() {
     const util = new Utility();
 
-    juan.commands.set('help', new HelpCommand(juan));
-    juan.commands.set('name', new NameCommand(juan,
+    juan.commands.set('help', new HelpCommand(juan, logger));
+    juan.commands.set('name', new NameCommand(juan, logger,
       new NameArgsParser(new RaceFactory(util)),
-      new JsonRandomSelectorRepository(util)
+      new JsonRandomSelectorRepository(util, logger)
     ));
 
-    console.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
+    logger.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);
   }
 
   function onMessage(msg: Message) {
     if (msg.content === config.discord.authToken) {
-      console.log(`Emergency shut-off requested by ${msg.author.username}#${msg.author.discriminator} id ${msg.author.id}`);
+      logger.log(`Emergency shut-off requested by ${msg.author.username}#${msg.author.discriminator} id ${msg.author.id}`);
       // exit instead of set exitCode because this needs to be shut off immediately
       process.exit(503);
     }

@@ -5,11 +5,13 @@ import { Race } from "../models/race";
 import { NameArgs } from "./nameArgs";
 import { GeneratedNames } from "./generatedNames";
 import { Utility } from "../../utility";
+import { Logger } from "../../logger";
 
 export class JsonRandomSelectorRepository extends NameRepository {
 
   constructor(
     private readonly utility: Utility,
+    private readonly logger: Logger
   ){
     super();
   }
@@ -112,10 +114,10 @@ export class JsonRandomSelectorRepository extends NameRepository {
 
       return seedData;
     }).catch((err) => {
-      console.log(`Error while generating seed data for JsonSeedRepository.`);
-      console.log(`Filename: ${requestUri}`);
-      console.log(`Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);
-      console.log(err);
+      this.logger.log('Error while generating seed data for JsonSeedRepository.');
+      this.logger.log(`Filename: ${requestUri}`);
+      this.logger.log(`Race ${seedData.selectedRace}, Gender ${seedData.selectedGender}`);
+      this.logger.log(err);
       seedData.error.push('An error occurred while generating seed data for name generation. This has been logged and will be fixed soon:tm:.');
       return seedData;
     });

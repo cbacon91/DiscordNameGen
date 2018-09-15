@@ -1,5 +1,4 @@
 import { Race } from "./race";
-import { Utility } from "../../utility";
 
 const Dwarf = { 
   name: 'dwarf', 
@@ -54,22 +53,5 @@ const Races = { Dwarf, Gnome, Halfling, Dragonborn, Orc, Elf, Human, Tiefling, V
 const RaceArray = [Dwarf, Gnome, Halfling, Dragonborn, Orc, Elf, Human, Tiefling, Virtue];
 let RaceKeys: string[] = [];
 RaceArray.forEach((r: Race) => RaceKeys = RaceKeys.concat(r.keys));
-
-export class RaceFactory {
-
-  constructor(private readonly utility: Utility){}
-
-  getRace(key: string): Race {
-    const selected = RaceArray.find((r: Race) => r.keys.includes(key));
-    if(!selected)
-      throw 'race not found, oh dear this shouldn\'t happen';
-    return selected;
-  }
-
-  random(): Race {
-    return RaceArray[this.utility.intBetween(0, RaceArray.length - 1)];
-  }
-}
-
 
 export { Races, RaceArray, RaceKeys };

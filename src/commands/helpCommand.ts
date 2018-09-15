@@ -3,12 +3,16 @@ import { config } from '../config';
 import { DiscordClient } from '../discordClient';
 import { Message, RichEmbed } from 'discord.js';
 import { Field } from './models/field';
+import { Logger } from '../logger';
 
+const cmdTitle = 'help';
 export class HelpCommand extends CommandBase {
-  constructor(client: DiscordClient) {
-    const cmdTitle = 'help';
+  constructor(
+    logger: Logger,
+    private readonly client: DiscordClient
+  ) {
 
-    super(client, {
+    super(logger, {
       name: cmdTitle,
       usage: 'help',
       description: 'Generates help and about information. You\'re reading it right meow.',
