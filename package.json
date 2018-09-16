@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .\\ --fix",
-    "test": "??????",
+    "test": "tsc & jasmine",
     "build": "npm install & npm run lint & npm test",
     "dev": "npm run build & node --inspect=127.0.0.1:9229 --harmony .",
     "start": "npm install & rmdir dist -recurse & tsc & node .\\dist\\index.js"
