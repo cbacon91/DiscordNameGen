@@ -1,6 +1,6 @@
-import { CommandData } from "./commandData";
-import { Message, RichEmbed } from "discord.js";
-import { Logger } from "../logger";
+import { CommandData } from './commandData';
+import { Message, RichEmbed } from 'discord.js';
+import { Logger } from '../logger';
 
 export abstract class CommandBase {
 
