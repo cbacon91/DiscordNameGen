@@ -1,7 +1,7 @@
-import { NameArgs } from "./nameArgs";
-import { Races, RaceKeys } from "../models/races";
-import { Race } from "../models/race";
-import { RaceFactory } from "../models/raceFactory";
+import { NameArgs } from './nameArgs'
+import { Races, RaceKeys } from '../models/races';
+import { Race } from '../models/race';
+import { RaceFactory } from '../models/raceFactory';
 
 const maxNameCount = 20;
 

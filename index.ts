@@ -8,8 +8,10 @@ import { JsonRandomSelectorRepository } from "./src/commands/namecommand/jsonRan
 import { Utility } from "./src/utility";
 import { RaceFactory } from "./src/commands/models/raceFactory";
 import { ConsoleLogger } from "./src/consoleLogger";
+import { ChangelogCommand } from './src/commands/changelogCommand';
 
 
+const util = new Utility();
 const logger = new ConsoleLogger();
 // wait five minutes and try again .. The most common crash is discord losing connection,
 // and trying again immediately would fail as well.
@@ -52,10 +54,10 @@ function init() {
   }
 
   function onReady() {
-    const util = new Utility();
 
-    juan.commands.set('help', new HelpCommand(juan, logger));
-    juan.commands.set('name', new NameCommand(juan, logger,
+    juan.commands.set('help', new HelpCommand(logger, juan));
+    juan.commands.set('changelog', new ChangelogCommand(logger));
+    juan.commands.set('name', new NameCommand(logger,
       new NameArgsParser(new RaceFactory(util)),
       new JsonRandomSelectorRepository(util, logger)
     ));

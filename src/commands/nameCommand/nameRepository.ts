@@ -1,5 +1,5 @@
-import { NameArgs } from "./nameArgs";
-import { GeneratedNames } from "./generatedNames";
+import { NameArgs } from './nameArgs';
+import { GeneratedNames } from './generatedNames';
 
 export abstract class NameRepository {
 

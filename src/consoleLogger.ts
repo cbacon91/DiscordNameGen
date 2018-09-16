@@ -1,4 +1,4 @@
-import { Logger } from "./logger";
+import { Logger } from './logger';
 
 export class ConsoleLogger extends Logger {
   log(s: string): void {

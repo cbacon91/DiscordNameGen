@@ -1,6 +1,6 @@
-import { Utility } from "../../utility";
-import { Race } from "./race";
-import { RaceArray } from "./races";
+import { Utility } from '../../utility';
+import { Race } from './race';
+import { RaceArray } from './races';
 
 export class RaceFactory {
 

@@ -11,7 +11,7 @@ export abstract class CommandBase {
 
   public abstract run(msg: Message, _args: string): void;
 
-  sendEmbed(embed: RichEmbed, originalMessage: Message): Promise<any> {
+  sendEmbed(embed: RichEmbed | undefined, originalMessage: Message): Promise<any> {
     if(embed === undefined) {
       return this.send('', originalMessage);
     }

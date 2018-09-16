@@ -1,5 +1,5 @@
-import { Race } from "../models/race";
-import { Races } from "../models/races";
+import { Race } from '../models/race';
+import { Races } from '../models/races';
 
 export class SeedData {
   constructor(init?: Partial<SeedData>){

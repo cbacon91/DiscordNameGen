@@ -1,4 +1,4 @@
-import { Race } from "./race";
+import { Race } from './race';
 
 const Dwarf = { 
   name: 'dwarf', 

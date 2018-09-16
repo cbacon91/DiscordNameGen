@@ -1,7 +1,7 @@
-import { NameCommand } from "../src/commands/nameCommand";
-import { Logger } from "../src/logger";
-import { NameArgsParser } from "../src/commands/namecommand/nameArgsParser";
-import { NameRepository } from "../src/commands/namecommand/nameRepository";
+import { NameCommand } from '../src/commands/nameCommand';
+import { Logger } from '../src/logger';
+import { NameArgsParser } from '../src/commands/namecommand/nameArgsParser';
+import { NameRepository } from '../src/commands/namecommand/nameRepository';
 import { NameArgs } from '../src/commands/namecommand/nameArgs';
 import { TextChannel, Message, Client } from 'discord.js';
 
