@@ -3,7 +3,7 @@ import { Logger } from '../src/logger';
 import { NameArgsParser } from '../src/commands/namecommand/nameArgsParser';
 import { NameRepository } from '../src/commands/namecommand/nameRepository';
 import { NameArgs } from '../src/commands/namecommand/nameArgs';
-import { TextChannel, Message, Client } from 'discord.js';
+import { TextChannel, Message } from 'discord.js';
 
 describe('nameCommand', () => {
   let command: NameCommand;
@@ -15,28 +15,27 @@ describe('nameCommand', () => {
 
   beforeEach(() => {
     channel = jasmine.createSpyObj('channel', ['send']);
-    logger = jasmine.createSpyObj('logger', []);
+    logger = jasmine.createSpyObj('logger', ['log']);
     parser = jasmine.createSpyObj('parser', ['parseArgs']);
-    repo = jasmine.createSpyObj('repo', []);
+    repo = jasmine.createSpyObj('repo', ['get']);
 
     command = new NameCommand(logger, parser, repo);
-message = jasmine.createSpyObj('message', []);
-message.channel.and.returnValue(channel);
-
-
+    message = jasmine.createSpyObj('message', ['channel']);
+    message.channel.and.returnValue(channel);
   });
 
-  describe('run', async () => {
-    it('should return early if args error', () => {
+  describe('run', () => {
+    it('should return early if args error', async () => {
       const errMsg = 'oops';
-      parser.parseArgs.and.returnValue(new NameArgs({
-        error: [errMsg]
-      }));
-      const message = {
-        channel: {
+      console.log('iit');
+      // parser.parseArgs.and.returnValue(new NameArgs({
+      //   error: [errMsg]
+      // }));
+      // const message = {
+      //   channel: {
           
-        }
-      }
+      //   }
+      // }
 
 
     });
