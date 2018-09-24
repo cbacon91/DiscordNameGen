@@ -50,7 +50,7 @@ export class HelpCommand extends CommandBase {
       fields: this.getFields(prefix),
       url: process.env.npm_package_homepage,
       title: 'Bugs? Questions? Requests? Feel free to contact my creator directly by opening an issue on GitHub',
-      description: `In a server, you can issue commands prefixed with ${prefix}, or @me, or direct message me (no prefix required).`
+      description: `In a server, you can issue commands prefixed with ${config.discord.defaultPrefix}, or @me, or direct message me (no prefix required).`
     }), message);
   }
 }

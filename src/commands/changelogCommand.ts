@@ -36,7 +36,7 @@ export class ChangelogCommand extends CommandBase {
   
     v4_0_0.push({
       name: '${prefix}name lag?',
-      value: 'The `${prefix}name` command now pulls names from the internet instead of locally, so it might be a tad slower. This should be insignificant and largely unnnoticeable. If it`\'s noticeable and/or an issue, please open an issue at the github link provided in `${prefix}help`.'
+      value: 'The `${prefix}name` command now pulls names from the internet instead of locally, so it might be a tad slower. This should be insignificant and largely unnnoticeable. If it\'s noticeable and/or an issue, please open an issue at the github link provided in `${prefix}help`.'
     });
   
     v4_0_0.push({
@@ -61,7 +61,7 @@ export class ChangelogCommand extends CommandBase {
   
     v4_0_0.push({
       name: 'internet json instead of local',
-      value: 'Names come from ${config.api.seedSource} instead of local json files. They otherwise behave the same, but this keeps the local repository a bit less ridiculous. It makes adding new names a much easier change to facilitate than an entire discord bot deploy. This is some scaffolding to make database integration a bit easier.'
+      value: `Names come from \`${config.api.srcUri}\` instead of local json files. They otherwise behave the same, but this keeps the local repository a bit less ridiculous. It makes adding new names a much easier change to facilitate than an entire discord bot deploy. This is some scaffolding to make database integration a bit easier.`
     });
     
     let prefix = '';

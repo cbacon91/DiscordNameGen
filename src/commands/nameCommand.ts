@@ -17,7 +17,7 @@ export class NameCommand extends CommandBase {
 
     super(logger, {
       name: cmdTitle,
-      usage: 'name elf female 20',
+      usage: 'name {race} {gender} {count}',
       description: 'Randomly selects a name from a list of pre-determined names based on race and gender (the base list comes from Xanathar\'s Guide to Everything). You can supply any number of races (or none), and I will choose a race at random and supply names for it. The order of parameters is not important, and no parameters are required. For more detailed help, use \'${prefix}help name\'',
       detailedHelp: nameDetailedHelp
     });
