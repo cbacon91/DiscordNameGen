@@ -1,15 +1,14 @@
 {
   "name": "discordnamegen",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint .\\ --fix",
-    "test": "mocha tests --harmony",
-    "build": "npm install & npm run lint & npm test",
-    "dev": "npm run build & node --inspect=127.0.0.1:9229 --harmony .",
-    "start": "npm install & node . --harmony"
-    },
+    "recompile": "rmdir dist /q /s & tsc",
+    "test": "npm run recompile & jasmine",
+    "build": "npm install & npm test",
+    "start": "npm run build & node .\\dist\\index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cbacon91/DiscordNameGen.git"
@@ -21,18 +20,23 @@
   },
   "homepage": "https://github.com/cbacon91/DiscordNameGen#readme",
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "bufferutil": "^3.0.0",
-    "discord.js": "^11.1.0",
+    "bufferutil": "^3.0.5",
+    "discord.js": "^11.4.2",
+    "erlpack": "github:hammerandchisel/erlpack",
     "opusscript": "0.0.3",
-    "uws": "^0.14.1"
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "uws": "^0.14.5"
   },
   "devDependencies": {
-    "chai": "^4.0.2",
+    "@types/jasmine": "^2.8.8",
+    "@types/node": "^10.9.4",
+    "@types/sinon": "^5.0.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.3.0",
-    "mocha": "^3.4.2",
-    "require-inject": "^1.4.0"
+    "jasmine": "^3.2.0",
+    "require-inject": "^1.4.0",
+    "typescript": "^3.0.3"
   }
 }

@@ -21,6 +21,10 @@ module.exports = {
         "class-methods-use-this": "off",
         "no-use-before-define": ["error", { 
             "functions": false 
-        }]
+        }],
+        "linebreak-style": 0,
+        "comma-dangle": 0,
+        "one-var-declaration-per-line": 0,
+        "one-var": 0
     }
 };
