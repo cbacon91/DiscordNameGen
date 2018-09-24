@@ -1,18 +1,16 @@
-import { DiscordClient } from "./src/discordClient";
-import { HelpCommand } from "./src/commands/helpCommand";
+import { DiscordClient } from './src/discordClient';
+import { HelpCommand } from './src/commands/helpCommand';
 import { config } from './src/config';
-import { Message } from "discord.js";
-import { NameCommand } from "./src/commands/nameCommand";
-import { NameArgsParser } from "./src/commands/namecommand/nameArgsParser";
-import { JsonRandomSelectorRepository } from "./src/commands/namecommand/jsonRandomSelectorRepository";
-import { Utility } from "./src/utility";
-import { RaceFactory } from "./src/commands/models/raceFactory";
-import { ConsoleLogger } from "./src/consoleLogger";
+import { Message } from 'discord.js';
+import { NameCommand } from './src/commands/nameCommand';
+import { NameArgsParser } from './src/commands/namecommand/nameArgsParser';
 import { ChangelogCommand } from './src/commands/changelogCommand';
+import { Resolution, Resolve } from './src/ioc';
+import { Logger } from './src/logger';
+import { NameRepository } from './src/commands/namecommand/nameRepository';
 
 
-const util = new Utility();
-const logger = new ConsoleLogger();
+const logger:Logger = Resolve<Logger>(Resolution.Logger);
 // wait five minutes and try again .. The most common crash is discord losing connection,
 // and trying again immediately would fail as well.
 const retryIn = 5 * 60 * 1000; //
@@ -58,8 +56,8 @@ function init() {
     juan.commands.set('help', new HelpCommand(logger, juan));
     juan.commands.set('changelog', new ChangelogCommand(logger));
     juan.commands.set('name', new NameCommand(logger,
-      new NameArgsParser(new RaceFactory(util)),
-      new JsonRandomSelectorRepository(util, logger)
+      Resolve<NameArgsParser>(Resolution.NameArgsParser),
+      Resolve<NameRepository>(Resolution.NameRepository)
     ));
 
     logger.log(`Setup Complete. Active in ${juan.guilds.size} servers.`);

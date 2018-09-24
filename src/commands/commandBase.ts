@@ -11,7 +11,7 @@ export abstract class CommandBase {
 
   public abstract run(msg: Message, _args: string): void;
 
-  sendEmbed(embed: RichEmbed | undefined, originalMessage: Message): Promise<any> {
+  protected sendEmbed(embed: RichEmbed | undefined, originalMessage: Message): Promise<any> {
     if(embed === undefined) {
       return this.send('', originalMessage);
     }
@@ -33,7 +33,7 @@ export abstract class CommandBase {
     }
   }
 
-  send(messageText: string | string[], originalMessage: Message): Promise<any> {
+  protected send(messageText: string | string[], originalMessage: Message): Promise<any> {
     if(!messageText || !messageText.length) {
       messageText = '**An error occurred while generating a reply. Please try again later.**';
     }

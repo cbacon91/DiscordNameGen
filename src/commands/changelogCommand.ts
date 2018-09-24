@@ -2,6 +2,7 @@ import { CommandBase } from './commandBase';
 import { Message, RichEmbed } from 'discord.js';
 import { Logger } from '../logger';
 import { Field } from './models/field';
+import { config } from '../config';
 
 const cmdTitle = 'help';
 export class ChangelogCommand extends CommandBase {
@@ -25,22 +26,22 @@ export class ChangelogCommand extends CommandBase {
 
     v4_0_0.push({
       name: '${prefix}name and arguments missing',
-      value: 'Using `%{prefix}name` without the gender or race specified by the user will select at random instead of defaulting to male and human respectively. The developer believe that random is more useful than human names (which are also, in his opinion, generally the worst). It also seems like people tended to use `${prefix}name human elf gnome orc [...]` to generate just a random name from the get-go, so this should make that process a bit less ridiculous.'
+      value: 'Using `${prefix}name` without the gender or race specified by the user will select at random instead of defaulting to male and human respectively. The developer believe that random is more useful than human names (which are also, in his opinion, generally the worst). It also seems like people tended to use `${prefix}name human elf gnome orc [...]` to generate just a random name from the get-go, so this should make that process a bit less ridiculous.'
     });
   
     v4_0_0.push({
       name: '${prefix}changelog added',
-      value: 'The `$[prefix}changelog` command was added. It shows this information.'
+      value: 'The `${prefix}changelog` command was added. It shows this information.'
     });
   
     v4_0_0.push({
       name: '${prefix}name lag?',
-      value: 'The `${prefix}name` command now pulls names from the internet instead of locally, so it might be a tad slower. This should be insignificant and largely unnnoticeable. If it`\'s noticeable and/or an issue, please open an issue at the github link provided in `$[prefix}help`.'
+      value: 'The `${prefix}name` command now pulls names from the internet instead of locally, so it might be a tad slower. This should be insignificant and largely unnnoticeable. If it`\'s noticeable and/or an issue, please open an issue at the github link provided in `${prefix}help`.'
     });
   
     v4_0_0.push({
-      name: 'nerd stuff',
-      value: 'The rest of the changes are code-specific and not central to user experience.'
+      name: '== dev-centric changes ==',
+      value: 'The rest of the changes are code-specific and not central to user experience, and are only here for the curious.'
     });
   
     v4_0_0.push({
@@ -63,9 +64,20 @@ export class ChangelogCommand extends CommandBase {
       value: 'Names come from ${config.api.seedSource} instead of local json files. They otherwise behave the same, but this keeps the local repository a bit less ridiculous. It makes adding new names a much easier change to facilitate than an entire discord bot deploy. This is some scaffolding to make database integration a bit easier.'
     });
     
+    let prefix = '';
+    if (message.guild)
+      prefix = config.discord.defaultPrefix;
+
+    const regex = /\${prefix}/gi;
+
     return this.sendEmbed(new RichEmbed({
       title: 'v4.0.0 release',
-      fields: v4_0_0
+      fields: v4_0_0.map((f: Field) => {
+        return {
+          name: f.name.replace(regex, prefix),
+          value: f.value.replace(regex, prefix)
+        } as Field;
+      })
     }), message);
   }
 }
