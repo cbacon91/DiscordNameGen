@@ -68,7 +68,7 @@ function init() {
       logger.log(`Emergency shut-off requested by ${msg.author.username}#${msg.author.discriminator} id ${msg.author.id}`);
       // exit instead of set exitCode because this needs to be shut off immediately
       process.exit(503);
-    }
+    }  
 
     if (msg.author.bot)
       return;
